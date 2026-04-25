@@ -47,6 +47,8 @@
 - [License](#license)
 - [Maintainers](#maintainers)
 - [What this is not](#what-this-is-not)
+- [Implementation status](#implementation-status)
+- [Project-control specs](#project-control-specs)
 
 ## Overview
 
@@ -105,6 +107,32 @@ Tracks Indiana/Carmel code context, permit requirements, inspections, and AHJ ve
 ## RAG / MCP / AI agents
 
 AI features are constrained by citations, approvals, tool allowlists, and audit trails.
+
+## Implementation status
+
+- 🟢 Contractor CRM guardrails: `trade required` and `engagement evidence required`
+- 🟢 Estimating guardrails: variance calculation baseline
+- 🟢 Bid package guardrails: award blocked without approved bid
+- 🟢 Code/compliance guardrails: citation-or-unknown plus metadata completeness checks
+- 🟢 Permitting guardrails: approval blocked without evidence
+- 🟢 Incentive guardrails: funding confirmation requires approval evidence; tax review flag enforced
+- 🟢 RAG/MCP/agent guardrails: citation checks, role allowlist checks, forbidden tool checks
+- 🟢 Template engine baseline: new project creation + Clay Terrace singleton validation
+- 🟢 Test suite: 15 scenario tests in `apps/api/src/projectControl/engine.test.ts`
+
+## Project-control specs
+
+- [docs/project-control-system.md](docs/project-control-system.md)
+- [docs/contractor-crm-spec.md](docs/contractor-crm-spec.md)
+- [docs/estimating-system-spec.md](docs/estimating-system-spec.md)
+- [docs/bid-package-system-spec.md](docs/bid-package-system-spec.md)
+- [docs/code-compliance-rag-spec.md](docs/code-compliance-rag-spec.md)
+- [docs/permitting-workflow-spec.md](docs/permitting-workflow-spec.md)
+- [docs/incentive-intelligence-spec.md](docs/incentive-intelligence-spec.md)
+- [docs/mcp-agentic-rag-architecture.md](docs/mcp-agentic-rag-architecture.md)
+- [docs/ai-agent-roles-and-permissions.md](docs/ai-agent-roles-and-permissions.md)
+- [docs/reusable-project-template-engine.md](docs/reusable-project-template-engine.md)
+- [docs/security-and-human-approval-rules.md](docs/security-and-human-approval-rules.md)
 
 ## Security model
 

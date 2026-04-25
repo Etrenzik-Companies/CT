@@ -1,0 +1,16 @@
+export const PROJECT_CONTROL_PAGES = [
+  "/project-control",
+  "/project-control/contractors",
+  "/project-control/trades",
+  "/project-control/estimating",
+  "/project-control/bid-packages",
+  "/project-control/code-compliance",
+  "/project-control/permitting",
+  "/project-control/incentives",
+  "/project-control/rag-knowledge",
+  "/project-control/mcp-tools",
+  "/project-control/agents",
+  "/project-control/templates",
+  "/project-control/risks",
+  "/project-control/decisions"
+] as const;

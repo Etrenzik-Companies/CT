@@ -1,11 +1,16 @@
-﻿{
-  "name": "@ct/api",
+{
+  "name": "@apps/api",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "typecheck": "echo typecheck placeholder",
-    "test": "echo test placeholder",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "tsx --test src/**/*.test.ts",
     "lint": "echo lint placeholder",
-    "build": "echo build placeholder"
+    "build": "tsc -p tsconfig.json"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "tsx": "^4.21.0",
+    "typescript": "^5.7.0"
   }
 }
