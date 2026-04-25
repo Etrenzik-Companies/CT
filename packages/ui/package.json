@@ -1,0 +1,11 @@
+﻿{
+  "name": "@ct/ui",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "typecheck": "echo typecheck placeholder",
+    "test": "echo test placeholder",
+    "lint": "echo lint placeholder",
+    "build": "echo build placeholder"
+  }
+}

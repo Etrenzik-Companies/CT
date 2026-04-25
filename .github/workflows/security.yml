@@ -1,0 +1,18 @@
+﻿name: Security
+
+on:
+  pull_request:
+  schedule:
+    - cron: "0 7 * * 1"
+
+jobs:
+  security-baseline:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Dependency review placeholder
+        run: echo "Add dependency review action when dependency graph stabilizes"
+      - name: npm audit placeholder
+        run: echo "Run npm/pnpm audit policy here"
+      - name: Secret scanning reminder
+        run: echo "Enable GitHub Advanced Security secret scanning"

@@ -1,0 +1,17 @@
+﻿{
+  "name": "ct-control-tower",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@10.5.0",
+  "scripts": {
+    "setup": "echo Setting up CT monorepo",
+    "dev": "echo Dev app placeholders are scaffolded",
+    "build": "pnpm -r --if-present run build",
+    "test": "pnpm -r --if-present run test",
+    "lint": "pnpm -r --if-present run lint",
+    "typecheck": "pnpm -r --if-present run typecheck",
+    "format": "echo Add formatter when codebase is populated",
+    "validate": "pnpm typecheck && pnpm test && pnpm lint && pnpm build",
+    "docs": "echo Docs are in ./docs"
+  }
+}

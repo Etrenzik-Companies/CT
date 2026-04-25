@@ -1,0 +1,1 @@
+﻿# Funding agent prompt placeholder

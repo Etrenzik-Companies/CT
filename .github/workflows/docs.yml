@@ -1,0 +1,17 @@
+﻿name: Docs
+
+on:
+  pull_request:
+    paths:
+      - "docs/**"
+      - "README.md"
+
+jobs:
+  docs-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Markdown lint placeholder
+        run: echo "Add markdownlint"
+      - name: Link check placeholder
+        run: echo "Add markdown-link-check"
