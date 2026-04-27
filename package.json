@@ -13,5 +13,8 @@
     "format": "echo Add formatter when codebase is populated",
     "validate": "pnpm typecheck && pnpm test && pnpm lint && pnpm build",
     "docs": "echo Docs are in ./docs"
+  },
+  "devDependencies": {
+    "wrangler": "3.90.0"
   }
 }
