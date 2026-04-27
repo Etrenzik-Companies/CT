@@ -109,7 +109,7 @@ export function enforceProjectControlHooks(task: TaskManifest, tools: ToolDefini
   ok: boolean;
   reason: string;
 } {
-  const requiredHooks = hooks.filter((hook) =>
+  const requiredHooks = hooks.filter((_hook) =>
     tools.some((tool) => tool.requiresProjectControlHook)
   );
 
