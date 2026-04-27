@@ -1,4 +1,37 @@
 ﻿# Changelog
+## 0.7.0 - 2026-04-27
+
+### Phase 6 — RWA, XRPL, PoF, ESG, Incentive, and Funding Intelligence
+
+- Added `apps/api/src/rwa/` — RWA Asset Registry engine.
+  - `types.ts`: `RwaAsset`, `RwaReadinessResult`, 6 required evidence types, readiness statuses.
+  - `engine.ts`: `assessRwaAsset()`, `assessRwaPortfolio()`. Checks 6 evidence types, ownership = 100%, liens, appraisal age, insurance expiry.
+  - `engine.test.ts`: 8 tests, all passing.
+- Added `apps/api/src/xrpl/` — XRPL Readiness simulation layer.
+  - `types.ts`: `XrplSettlementReadiness`, 11 action types (all `approval_required`), 8 compliance warning codes.
+  - `readiness.ts`: `assessXrplReadiness()`. Simulation only — no live execution ever.
+  - `readiness.test.ts`: 8 tests, all passing.
+- Added `apps/api/src/pof/` — Proof of Funds engine.
+  - `types.ts`: 17 funding source types, `PofReadinessStatus`, `ProofOfFundsPacket`, `PofReadinessResult`.
+  - `engine.ts`: `assessProofOfFunds()`. Estimated sources never count as verified. Gap = projectCost − verifiedFunds.
+  - `engine.test.ts`: 7 tests, all passing.
+- Added `apps/api/src/incentives/` — Tax Incentive Intelligence engine.
+  - `types.ts`: 13 sources, 11 categories, `IncentiveProgram`, `IncentiveMatchResult`.
+  - `engine.ts`: `matchIncentivePrograms()`. 6 built-in programs (179D, 45L, DOE, GA property tax, GA energy loan, GE utility rebates). All matches require tax professional review.
+  - `engine.test.ts`: 8 tests, all passing.
+- Added `apps/api/src/esg/` — ESG Scorecard engine.
+  - `types.ts`: 9 metric categories, `EsgScorecard`, `EsgScorecardResult`, estimate flags.
+  - `engine.ts`: `assessEsgScorecard()`. Category weights: energy:25, emissions:20, water:10, resilience:10, IAQ:10, community:10, workforce:5, compliance:5, docs:5. Estimates score at 40%.
+  - `engine.test.ts`: 8 tests, all passing.
+- Added `apps/api/src/funding/` — Funding Intelligence engine.
+  - `types.ts`: 14 program types, `FundingMatchResult`, `SubmissionPacket`, `FundingIntelligenceResult`.
+  - `engine.ts`: `assessFundingIntelligence()`. 6 built-in programs. Strict potential/committed separation. Capital gap computed from committed stack only.
+  - `engine.test.ts`: 9 tests, all passing.
+- Updated `apps/web/src/project-control-pages.ts` — added 6 new module paths.
+- Updated `apps/web/src/App.tsx` — added Phase 6 PAGE_META, `Phase6Panel` component with status badges, review warning banners, and data cards for all 6 modules.
+- Added docs: `13-rwa-xrpl-pof-funding-intelligence.md`, `14-tax-incentive-esg-funding-source-map.md`, `15-lender-submission-and-pof-readiness.md`.
+- Updated `docs/00-table-of-contents.md` with Phase 6 doc entries.
+
 
 ## 0.6.0 - 2026-04-27
 

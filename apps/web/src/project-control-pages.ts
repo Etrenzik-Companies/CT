@@ -12,5 +12,11 @@ export const PROJECT_CONTROL_PAGES = [
   "/project-control/agents",
   "/project-control/templates",
   "/project-control/risks",
-  "/project-control/decisions"
+  "/project-control/decisions",
+  "/project-control/rwa",
+  "/project-control/xrpl-readiness",
+  "/project-control/pof",
+  "/project-control/incentive-intelligence",
+  "/project-control/esg-scorecard",
+  "/project-control/funding-match",
 ] as const;
