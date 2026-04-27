@@ -31,4 +31,11 @@ export const PROJECT_CONTROL_PAGES = [
   "/project-control/hotel-local-taxes",
   "/project-control/code-compliance-indiana",
   "/project-control/evidence-gaps-indiana",
+  "/project-control/contractor-matrix",
+  "/project-control/trade-readiness",
+  "/project-control/funding-routes",
+  "/project-control/rwa-funding-routes",
+  "/project-control/lender-evidence-checklist",
+  "/project-control/draw-package-readiness",
+  "/project-control/funding-gap-map",
 ] as const;

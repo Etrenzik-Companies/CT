@@ -56,6 +56,13 @@
   - Enforced lender-safe value stages: `estimated | application_ready | submitted | awarded | verified | not_counted`.
   - Added seven new dashboard modules for Indiana matrix operations and evidence-gap actioning.
 
+- 🟡 **Phase 7.2 — Contractor, Funding Route, and RWA Control Layer** (`0.8.3`)
+  - Added deterministic contractor/trade matrix with lender, code, and incentive blocker detection.
+  - Added funding route matrix with explicit stage buckets and verified-funds guardrails.
+  - Added explicit tax-obligation-only treatment for hotel/local taxes.
+  - Added RWA/XRPL route controls: non-spendable reference model, legal/compliance/human approval gates, and blocked live execution.
+  - Added seven funding control dashboard modules and docs 23–25 for master lender checklist operations.
+
 ## Planned
 
 - ⚪ **Phase 8 — Funding Diligence and Submission Ops**

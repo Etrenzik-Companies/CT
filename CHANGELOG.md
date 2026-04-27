@@ -1,4 +1,32 @@
 ﻿# Changelog
+## 0.8.3 - 2026-04-27
+
+### Funding Control Room Expansion
+
+- Added `apps/api/src/contractorMatrix/types.ts`, `apps/api/src/contractorMatrix/engine.ts`, and `apps/api/src/contractorMatrix/engine.test.ts`.
+  - Introduced contractor/trade readiness typing and deterministic lender-blocker evaluation for GC, major trades, permit readiness, and incentive-impact trade evidence.
+- Added `apps/api/src/fundingRoutes/types.ts`, `apps/api/src/fundingRoutes/engine.ts`, and `apps/api/src/fundingRoutes/engine.test.ts`.
+  - Implemented route-level stage separation (`estimated/submitted/awarded/verified/obligation_only/not_counted`) and strict verified-funds gating.
+  - Added explicit `hotel_local_taxes_obligation` route to enforce tax obligations as non-funding.
+- Added `apps/api/src/rwaFundingRoutes/types.ts`, `apps/api/src/rwaFundingRoutes/engine.ts`, and `apps/api/src/rwaFundingRoutes/engine.test.ts`.
+  - Added non-spendable RWA/XRPL route controls with legal/compliance/human approval gates and live-execution blocking.
+- Updated `apps/web/src/project-control-pages.ts` and `apps/web/src/App.tsx`.
+  - Added seven new dashboard modules:
+    - Contractor Matrix
+    - Trade Readiness
+    - Funding Routes
+    - RWA Funding Routes
+    - Lender Evidence Checklist
+    - Draw Package Readiness
+    - Funding Gap Map
+- Added docs:
+  - `docs/23-contractor-and-trade-funding-readiness-matrix.md`
+  - `docs/24-funding-routes-and-rwa-capital-stack.md`
+  - `docs/25-lender-evidence-master-checklist.md`
+- Updated documentation and planning indexes:
+  - `docs/00-table-of-contents.md`
+  - `ROADMAP.md`
+
 ## 0.8.2 - 2026-04-27
 
 ### Indiana Official-Source Matrix Expansion

@@ -2,6 +2,13 @@ import { Routes, Route, NavLink, useNavigate } from "react-router-dom";
 import { PROJECT_CONTROL_PAGES } from "./project-control-pages";
 
 const PAGE_META: Record<string, { label: string; icon: string; desc: string }> = {
+  "/project-control/contractor-matrix": { label: "Contractor Matrix", icon: "🧱", desc: "Master contractor evidence matrix with lender, code, and incentive impacts." },
+  "/project-control/trade-readiness": { label: "Trade Readiness", icon: "🧰", desc: "Trade-by-trade readiness and blocker map for GC, MEP, life-safety, and specialty scopes." },
+  "/project-control/funding-routes": { label: "Funding Routes", icon: "💳", desc: "Route-by-route funding logic: required docs, risks, approvals, and what counts as verified." },
+  "/project-control/rwa-funding-routes": { label: "RWA Funding Routes", icon: "📜", desc: "RWA/XRPL route controls showing allowed use, prohibited use, and approval state." },
+  "/project-control/lender-evidence-checklist": { label: "Lender Evidence Checklist", icon: "🗃️", desc: "Master lender package checklist across identity, site control, budget, contracts, taxes, and compliance." },
+  "/project-control/draw-package-readiness": { label: "Draw Package Readiness", icon: "📤", desc: "Construction draw readiness with lien waiver, inspection, and schedule support checks." },
+  "/project-control/funding-gap-map": { label: "Funding Gap Map", icon: "🧭", desc: "Separated funding buckets for verified, awarded, submitted, estimated, and obligations." },
   "/project-control/indiana-program-matrix": { label: "Indiana Program Matrix", icon: "🧮", desc: "Official-source matrix across incentives, grants, taxes, code compliance, and public finance." },
   "/project-control/esg-incentives-indiana": { label: "ESG Incentives", icon: "⚡", desc: "Federal and Indiana ESG/energy incentive screening with evidence gates and value-stage separation." },
   "/project-control/grants-public-funding": { label: "Grants & Public Funding", icon: "🏛️", desc: "State, local, environmental, and workforce grant pathways with monitor-only controls." },
@@ -117,9 +124,19 @@ function SectionPage({ path }: { path: string }) {
     "/project-control/code-compliance-indiana",
     "/project-control/evidence-gaps-indiana",
   ];
+  const fundingControlPaths = [
+    "/project-control/contractor-matrix",
+    "/project-control/trade-readiness",
+    "/project-control/funding-routes",
+    "/project-control/rwa-funding-routes",
+    "/project-control/lender-evidence-checklist",
+    "/project-control/draw-package-readiness",
+    "/project-control/funding-gap-map",
+  ];
   const isPhase6 = phase6Paths.includes(path);
   const isPhase7 = phase7Paths.includes(path);
   const isIndianaMatrix = indianaMatrixPaths.includes(path);
+  const isFundingControl = fundingControlPaths.includes(path);
   return (
     <div style={S.page}>
       <div style={S.breadcrumb}>
@@ -132,7 +149,8 @@ function SectionPage({ path }: { path: string }) {
       {isPhase6 && <Phase6Panel path={path} />}
       {isPhase7 && <Phase7Panel path={path} />}
       {isIndianaMatrix && <IndianaMatrixPanel path={path} />}
-      {!isPhase6 && !isPhase7 && !isIndianaMatrix && (
+      {isFundingControl && <FundingControlPanel path={path} />}
+      {!isPhase6 && !isPhase7 && !isIndianaMatrix && !isFundingControl && (
         <div style={S.placeholder}>
           <div style={{ fontSize: 48, marginBottom: 16 }}>{meta?.icon}</div>
           <div style={{ color: "var(--muted)" }}>This module is under active development.</div>
@@ -465,8 +483,140 @@ function Phase7Panel({ path }: { path: string }) {
   );
 }
 
+const FUNDING_CONTROL_PANELS: Record<string, { status: string; statusColor: string; badges: string[]; reviewWarning: string; items: Array<{ label: string; value: string; note?: string }> }> = {
+  "/project-control/contractor-matrix": {
+    status: "EVIDENCE GATED",
+    statusColor: "var(--warning, #d97706)",
+    badges: ["W-9", "License", "Insurance", "Bids", "Schedule", "Lien Waivers"],
+    reviewWarning: "Missing GC/major trade evidence blocks lender readiness even when capital sources look sufficient.",
+    items: [
+      { label: "Total Contractors Screened", value: "38 trade packets" },
+      { label: "Lender-Blocking Trades", value: "7" },
+      { label: "Code-Blocking Trades", value: "5" },
+      { label: "Incentive-Blocking Trades", value: "4", note: "Mostly energy trades missing equipment specs" },
+      { label: "Missing Evidence", value: "W-9, insurance, approved bids, schedule, permit assignment" },
+      { label: "Next Best Action", value: "Close GC + architect + MEP blocker packets first" },
+    ],
+  },
+  "/project-control/trade-readiness": {
+    status: "NEEDS REVIEW",
+    statusColor: "var(--warning, #d97706)",
+    badges: ["GC", "Architect", "Civil", "Structural", "MEP", "Life Safety"],
+    reviewWarning: "Trade readiness is separate from funding route status and can independently block loan closing/draws.",
+    items: [
+      { label: "Major Trade Readiness", value: "Not lender-ready" },
+      { label: "Blocked Trades", value: "General contractor, architect, mechanical, electrical, fire protection" },
+      { label: "Schedule Risk", value: "Medium to High", note: "Lead-time evidence incomplete" },
+      { label: "Lien Waiver Control", value: "Incomplete" },
+      { label: "Draw Support", value: "Insufficient until bid + schedule + waiver chain is complete" },
+      { label: "Next Best Action", value: "Lock bid approvals and draw-control evidence by trade" },
+    ],
+  },
+  "/project-control/funding-routes": {
+    status: "SEPARATED BUCKETS",
+    statusColor: "var(--accent, #3b82f6)",
+    badges: ["Verified", "Awarded", "Submitted", "Estimated", "Obligations", "Not Counted"],
+    reviewWarning: "Estimated incentives, applied grants, potential TIF/bonds, and XRPL proof routes do not count as verified funds.",
+    items: [
+      { label: "Route Count", value: "28 routes tracked" },
+      { label: "Verified Funding", value: "$0 (placeholder until evidence-backed commitments are loaded)" },
+      { label: "Estimated Funding", value: "Tracked separately" },
+      { label: "Awarded Funding", value: "Tracked separately" },
+      { label: "Obligations", value: "Taxes, code, permit cost buckets" },
+      { label: "Next Best Action", value: "Move routes from estimated/submitted to awarded/verified with evidence" },
+    ],
+  },
+  "/project-control/rwa-funding-routes": {
+    status: "APPROVAL REQUIRED",
+    statusColor: "var(--warning, #d97706)",
+    badges: ["Proof Only", "No Live Issuance", "No DEX", "No Escrow", "Legal Review"],
+    reviewWarning: "RWA/XRPL routes are evidence/compliance routes and not spendable funding sources in this control room.",
+    items: [
+      { label: "RWA Route Count", value: "12" },
+      { label: "Spendable Funding", value: "$0", note: "All RWA/XRPL routes are non-spendable here" },
+      { label: "Blocked Live Routes", value: "Live transaction route blocked by policy" },
+      { label: "Legal/Compliance Gates", value: "Required for tokenized security and issued-asset review routes" },
+      { label: "Approval Status", value: "Human + legal + compliance required for high-risk routes" },
+      { label: "Next Best Action", value: "Use RWA routes for evidence and diligence only" },
+    ],
+  },
+  "/project-control/lender-evidence-checklist": {
+    status: "MASTER CHECKLIST",
+    statusColor: "var(--accent, #3b82f6)",
+    badges: ["Identity", "Site Control", "Budget", "Capital Stack", "Permits", "Legal"],
+    reviewWarning: "Lender package remains blocked until all required master-checklist sections are evidenced and reviewed.",
+    items: [
+      { label: "Core Sections", value: "Project identity, site control, budget, capital stack, PoF, appraisal, entitlements" },
+      { label: "Contractor Package", value: "GC contract, trade bids, licenses, insurance, bonding, schedule" },
+      { label: "Tax + ESG Package", value: "Tax memo, 179D/48E/30C review, utility/grant evidence" },
+      { label: "RWA/XRPL Package", value: "Proof-reference only, with legal/compliance approval log" },
+      { label: "Missing Evidence", value: "Parcel/zoning/utility, award letters, approvals, permit chain" },
+      { label: "Next Best Action", value: "Complete blocker evidence for lender use authorization" },
+    ],
+  },
+  "/project-control/draw-package-readiness": {
+    status: "DRAW CONTROLS",
+    statusColor: "var(--warning, #d97706)",
+    badges: ["Budget", "Schedule", "Inspections", "Lien Waivers", "CO", "Contingency"],
+    reviewWarning: "Loan draw readiness requires lien-waiver and inspection evidence controls, not only budget lines.",
+    items: [
+      { label: "Draw Package Status", value: "Not ready" },
+      { label: "Required Draw Evidence", value: "Approved schedule of values, inspections, lien waivers, change-order log" },
+      { label: "Primary Gaps", value: "Trade-level waivers and schedule updates missing" },
+      { label: "Contingency Controls", value: "Needs documented change-order governance" },
+      { label: "Risk", value: "Funding delay risk until draw controls are complete" },
+      { label: "Next Best Action", value: "Finalize draw package template with trade packet bindings" },
+    ],
+  },
+  "/project-control/funding-gap-map": {
+    status: "GAP VISIBILITY",
+    statusColor: "var(--accent, #3b82f6)",
+    badges: ["Capital Gap", "Verified", "Estimated", "Obligations", "Not Counted"],
+    reviewWarning: "Gap map separates spendable capital from non-spendable estimates and obligations.",
+    items: [
+      { label: "Capital Gap", value: "Visible separately from estimated incentives" },
+      { label: "Verified Dollar Bucket", value: "Only evidence-backed and authorized funds" },
+      { label: "Estimated Bucket", value: "Does not close lender gap" },
+      { label: "Obligations Bucket", value: "Hotel/local taxes + code/permit obligations" },
+      { label: "Not-Counted Bucket", value: "RWA proof references, applied grants, potential public-finance items" },
+      { label: "Next Best Action", value: "Convert approved routes and award letters into verified bucket" },
+    ],
+  },
+};
+
 function IndianaMatrixPanel({ path }: { path: string }) {
   const panel = INDIANA_MATRIX_PANELS[path];
+  if (!panel) return null;
+  return (
+    <div>
+      <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20, flexWrap: "wrap" }}>
+        <span style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 6, padding: "4px 14px", fontSize: 12, fontWeight: 700, color: panel.statusColor, letterSpacing: 0.5 }}>
+          {panel.status}
+        </span>
+        {panel.badges.map((badge) => (
+          <span key={badge} style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 6, padding: "3px 10px", fontSize: 11, color: "var(--muted)" }}>
+            {badge}
+          </span>
+        ))}
+      </div>
+      <div style={{ background: "var(--surface)", border: `1px solid ${panel.statusColor}`, borderRadius: 8, padding: "12px 16px", marginBottom: 20, fontSize: 13, color: panel.statusColor }}>
+        ⚠️ {panel.reviewWarning}
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 12 }}>
+        {panel.items.map((item) => (
+          <div key={item.label} style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 8, padding: "16px 18px" }}>
+            <div style={{ fontSize: 11, color: "var(--muted)", marginBottom: 6, textTransform: "uppercase", letterSpacing: 0.5 }}>{item.label}</div>
+            <div style={{ fontWeight: 600, fontSize: 13, color: "var(--text)" }}>{item.value}</div>
+            {item.note && <div style={{ fontSize: 11, color: "var(--muted)", marginTop: 4 }}>{item.note}</div>}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function FundingControlPanel({ path }: { path: string }) {
+  const panel = FUNDING_CONTROL_PANELS[path];
   if (!panel) return null;
   return (
     <div>

@@ -24,6 +24,9 @@
 | 🟢 | Indiana Project Brief | 20-clay-terrace-indiana-project-brief.md | Source-grounded Clay Terrace project profile, Indiana incentive map, and evidence gaps |
 | 🟢 | Indiana Matrix | 21-indiana-esg-incentives-grants-bonds-tax-code-matrix.md | Official-source Indiana matrix for incentives, grants, public finance, taxes, code, and evidence gates |
 | 🟢 | Carmel/Hamilton Playbook | 22-carmel-hamilton-county-compliance-and-public-finance.md | Compliance and public-finance workflow for Carmel/Hamilton County lender-safe execution |
+| 🟢 | Contractor + Trade Matrix | 23-contractor-and-trade-funding-readiness-matrix.md | Lender-grade contractor and trade evidence gates tied to funding/draw readiness |
+| 🟢 | Funding Routes + RWA Stack | 24-funding-routes-and-rwa-capital-stack.md | Funding route taxonomy with verified/estimated/obligation separation and RWA route controls |
+| 🟢 | Lender Evidence Master Checklist | 25-lender-evidence-master-checklist.md | Complete lender checklist across contractors, trades, documents, evidence, routes, and blockers |
 
 ## Project Control Specs
 
