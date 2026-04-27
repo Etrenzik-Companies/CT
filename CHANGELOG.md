@@ -1,5 +1,22 @@
 ﻿# Changelog
 
+## 0.6.0 - 2026-04-27
+
+### Phase 5 — Web App and Cloudflare Pages Deployment
+
+- Replaced `apps/web` placeholder with a production-grade Vite + React 18 + TypeScript SPA.
+  - `src/App.tsx`: sidebar navigation, 14-module dashboard grid, per-section detail pages.
+  - `public/_redirects`: SPA fallback routing for Cloudflare Pages.
+  - `wrangler.toml`: Cloudflare Pages project binding (`ct-control-tower`, `dist/` output).
+  - `tsconfig.json` + `vite.config.ts`: strict TypeScript, `@vitejs/plugin-react`.
+  - Updated `package.json` from echo placeholders to real Vite build + typecheck scripts.
+- Created Cloudflare Pages project `ct-control-tower` (API-provisioned, account `07bcc4a189ef176261b818409c95891f`).
+  - Custom domain `ct.unykorn.org` attached and initializing.
+- Added `.github/workflows/deploy.yml`.
+  - Triggered on push to `main` or manual `workflow_dispatch`.
+  - Runs `pnpm --filter @apps/web build` then `wrangler pages deploy` via `cloudflare/wrangler-action@v3`.
+  - Requires repository secrets `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`.
+
 ## 0.5.0 - 2026-04-25
 
 ### Phase 4 — Shared packages and real ESLint

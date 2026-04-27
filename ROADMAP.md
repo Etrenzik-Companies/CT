@@ -26,13 +26,19 @@
   - `@ct/types`: authoritative domain union types — `ProjectStatus`, `RiskLevel`, `TradeCategory`, `FundingType`, `DocumentType`, `AgentRole`, and more.
   - Real ESLint (`typescript-eslint` flat config) in `apps/api`.
 
+- ✅ **Phase 5 — Web App and Cloudflare Pages Deployment** (`0.6.0`)
+  - Vite + React 18 + TypeScript SPA replacing placeholder `apps/web`.
+  - 14-module dashboard: contractors, trades, estimating, bid-packages, code-compliance, permitting, incentives, RAG knowledge, MCP tools, agents, templates, risks, decisions.
+  - Cloudflare Pages project `ct-control-tower`, custom domain `ct.unykorn.org`.
+  - GitHub Actions deploy workflow (`deploy.yml`) using `cloudflare/wrangler-action@v3`.
+
 ## In Progress
 
-- 🟡 **Phase 5 — Contractor CRM**
+- 🟡 **Phase 6 — Contractor CRM**
   - CRUD operations for contractor profiles, trade categories, license / insurance verification.
   - Integration with `@ct/types` trade categories and `@ct/shared` `Result` pattern.
 
-- 🟡 **Phase 6 — Estimating Engine**
+- 🟡 **Phase 7 — Estimating Engine**
   - Bid package generation, line-item cost database, change-order workflow.
   - Export to PDF and structured JSON.
 

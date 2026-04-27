@@ -1,0 +1,21 @@
+/* CT Control Tower — global styles */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0d0f14;
+  --surface: #151820;
+  --border: #222736;
+  --text: #e8eaf0;
+  --muted: #8b92a8;
+  --accent: #4f7cff;
+  --accent-dim: #1e2d5c;
+  --success: #34c97a;
+  --warn: #f5a623;
+  --danger: #e85454;
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
+}
+
+body { background: var(--bg); color: var(--text); min-height: 100dvh; }
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
