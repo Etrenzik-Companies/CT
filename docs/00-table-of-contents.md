@@ -18,6 +18,15 @@
 | 🟢 | Incentive + ESG Map | 14-tax-incentive-esg-funding-source-map.md | Tax incentive programs, ESG metric weights, stacking rules |
 | 🟢 | Lender Submission Guide | 15-lender-submission-and-pof-readiness.md | PoF readiness checklist, lender submission workflow |
 | ⚫ | Security Hardening | 16-post-deployment-security-hardening.md | Post-deployment hardening, token rotation, and repo hygiene |
+| 🟢 | Evidence + RAG Index | 17-evidence-intake-rag-index.md | Evidence intake, registry status, and citation-first RAG indexing |
+| 🟢 | Lender Packet Builder | 18-lender-packet-builder.md | Lender packet sections, readiness score, and blocking rules |
+| 🟢 | Incentive Evidence + Submission | 19-incentive-evidence-and-submission-readiness.md | Incentive evidence stages and submission readiness rules |
+| 🟢 | Indiana Project Brief | 20-clay-terrace-indiana-project-brief.md | Source-grounded Clay Terrace project profile, Indiana incentive map, and evidence gaps |
+| 🟢 | Indiana Matrix | 21-indiana-esg-incentives-grants-bonds-tax-code-matrix.md | Official-source Indiana matrix for incentives, grants, public finance, taxes, code, and evidence gates |
+| 🟢 | Carmel/Hamilton Playbook | 22-carmel-hamilton-county-compliance-and-public-finance.md | Compliance and public-finance workflow for Carmel/Hamilton County lender-safe execution |
+| 🟢 | Contractor + Trade Matrix | 23-contractor-and-trade-funding-readiness-matrix.md | Lender-grade contractor and trade evidence gates tied to funding/draw readiness |
+| 🟢 | Funding Routes + RWA Stack | 24-funding-routes-and-rwa-capital-stack.md | Funding route taxonomy with verified/estimated/obligation separation and RWA route controls |
+| 🟢 | Lender Evidence Master Checklist | 25-lender-evidence-master-checklist.md | Complete lender checklist across contractors, trades, documents, evidence, routes, and blockers |
 
 ## Project Control Specs
 
