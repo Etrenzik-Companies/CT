@@ -36,36 +36,35 @@
   - 6 new web dashboard panels with status badges, review warnings, and data cards.
   - 3 new documentation files (docs 13–15). 53 total tests passing.
   - Vite + React 18 + TypeScript SPA replacing placeholder `apps/web`.
- ## In Progress
- 🟡 **Phase 7 — Contractor CRM and Estimating Engine**
-  - CRUD operations for contractor profiles, trade categories, license / insurance verification.
-  - Bid package generation, line-item cost database, change-order workflow.
-  - Integration with `@ct/types` trade categories and `@ct/shared` `Result` pattern.
+
+- ✅ **Phase 6.1 — Post-Deployment Security Hardening** (`0.7.1`)
+  - Added production verification and repo hygiene scripts.
+  - Added token-rotation and GitHub secrets follow-up documentation.
+
 ## In Progress
 
-- 🟡 **Phase 6 — Contractor CRM**
-  - CRUD operations for contractor profiles, trade categories, license / insurance verification.
-  - Integration with `@ct/types` trade categories and `@ct/shared` `Result` pattern.
-
-- 🟡 **Phase 7 — Estimating Engine**
-  - Bid package generation, line-item cost database, change-order workflow.
-  - Export to PDF and structured JSON.
+- 🟡 **Phase 7 — Evidence Intake + RAG Index + Lender Packet Builder** (`0.8.0`)
+  - Evidence registry with deterministic classification, gaps, review queues, and expiration handling.
+  - Citation-first RAG indexing with mock deterministic search and explicit unindexed-document reporting.
+  - Lender packet readiness with PoF gap blocking, missing evidence detection, lender authorization checks, and blockchain off-chain review gates.
+  - Incentive evidence staging from `estimated` through `verified` with verified-funds separation.
+  - Five new web modules: Evidence Intake, RAG Index, Lender Packet, Incentive Evidence, Submission Readiness.
 
 ## Planned
 
-- ⚪ **Phase 7 — Funding Diligence**
+- ⚪ **Phase 8 — Funding Diligence and Submission Ops**
   - Lender outreach tracker, closing-conditions matrix, term-sheet comparison.
   - Integration with clay terrace main repo funding data.
 
-- ⚪ **Phase 8 — RAG / MCP / AI Agents**
-  - Document ingestion into vector store via `@ct/rag`.
-  - Agent roles wired to `AgentRole` type; answers with citations.
+- ⚪ **Phase 9 — Live Intake and Vector Indexing**
+  - Real document upload flows, persistent index storage, and vector retrieval adapters.
+  - Funding packet exports tied to accepted evidence and cited retrieval results.
 
-- ⚪ **Phase 9 — ESG / Carbon Zero**
+- ⚪ **Phase 10 — ESG / Carbon Zero**
   - Carbon footprint tracker, LEED/BREEAM checklist, ESG reporting.
 
-- ⚪ **Phase 10 — Security Hardening**
+- ⚪ **Phase 11 — Security Hardening**
   - RBAC enforcement, audit log, secrets management, pen-test checklist.
 
-- ⚪ **Phase 11 — Deployment and Operations**
+- ⚪ **Phase 12 — Deployment and Operations**
   - Docker compose production stack, health checks, observability.

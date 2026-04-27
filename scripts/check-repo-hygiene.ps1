@@ -1,7 +1,7 @@
 $ErrorActionPreference = "Stop"
 
 $branch = (git rev-parse --abbrev-ref HEAD).Trim()
-$upstream = (git rev-parse --abbrev-ref --symbolic-full-name "@{u}" 2>$null)
+$upstream = cmd /c "git rev-parse --abbrev-ref --symbolic-full-name @{u} 2>nul"
 if (-not $upstream) {
     $upstream = "(no upstream configured)"
 }

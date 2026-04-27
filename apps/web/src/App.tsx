@@ -2,6 +2,11 @@ import { Routes, Route, NavLink, useNavigate } from "react-router-dom";
 import { PROJECT_CONTROL_PAGES } from "./project-control-pages";
 
 const PAGE_META: Record<string, { label: string; icon: string; desc: string }> = {
+  "/project-control/evidence-intake":      { label: "Evidence Intake",       icon: "🗂️", desc: "Document intake registry for lender, ESG, incentive, and asset evidence." },
+  "/project-control/rag-index":            { label: "RAG Index",             icon: "📚", desc: "Indexed evidence citations with deterministic placeholder search." },
+  "/project-control/lender-packet":        { label: "Lender Packet",         icon: "📁", desc: "Lender packet readiness, missing evidence, and review blockers." },
+  "/project-control/incentive-evidence":   { label: "Incentive Evidence",    icon: "🧾", desc: "Maps incentive claims to required evidence and review status." },
+  "/project-control/submission-readiness": { label: "Submission Readiness",  icon: "🧭", desc: "Cross-functional readiness for lender submission and human approvals." },
   "/project-control/rwa":                    { label: "RWA Registry",           icon: "🏛️",  desc: "Real-world asset documentation readiness and lender evidence checklist." },
   "/project-control/xrpl-readiness":         { label: "XRPL Readiness",         icon: "⛓️",  desc: "XRPL settlement simulation and compliance warning review. Simulation only." },
   "/project-control/pof":                    { label: "Proof of Funds",          icon: "🏦",  desc: "Capital stack verification, gap analysis, and lender-ready PoF packet status." },
@@ -89,7 +94,15 @@ function SectionPage({ path }: { path: string }) {
     "/project-control/esg-scorecard",
     "/project-control/funding-match",
   ];
+  const phase7Paths = [
+    "/project-control/evidence-intake",
+    "/project-control/rag-index",
+    "/project-control/lender-packet",
+    "/project-control/incentive-evidence",
+    "/project-control/submission-readiness",
+  ];
   const isPhase6 = phase6Paths.includes(path);
+  const isPhase7 = phase7Paths.includes(path);
   return (
     <div style={S.page}>
       <div style={S.breadcrumb}>
@@ -100,7 +113,8 @@ function SectionPage({ path }: { path: string }) {
       <h1 style={S.h1}>{meta?.icon} {meta?.label}</h1>
       <p style={S.subtitle}>{meta?.desc}</p>
       {isPhase6 && <Phase6Panel path={path} />}
-      {!isPhase6 && (
+      {isPhase7 && <Phase7Panel path={path} />}
+      {!isPhase6 && !isPhase7 && (
         <div style={S.placeholder}>
           <div style={{ fontSize: 48, marginBottom: 16 }}>{meta?.icon}</div>
           <div style={{ color: "var(--muted)" }}>This module is under active development.</div>
@@ -192,6 +206,79 @@ const PHASE6_PANELS: Record<string, { status: string; statusColor: string; badge
   },
 };
 
+const PHASE7_PANELS: Record<string, { status: string; statusColor: string; badges: string[]; reviewWarning: string; items: Array<{ label: string; value: string; note?: string }> }> = {
+  "/project-control/evidence-intake": {
+    status: "NEEDS REVIEW",
+    statusColor: "var(--warning, #d97706)",
+    badges: ["Missing", "Uploaded", "Needs Review", "Accepted", "Blocked"],
+    reviewWarning: "Uploaded evidence is never accepted automatically. Human, legal, accounting, lender, and off-chain review remain required.",
+    items: [
+      { label: "Total Evidence Docs", value: "24 tracked", note: "Registry supports lender, ESG, incentive, RWA, and funding evidence" },
+      { label: "Accepted Docs", value: "9 accepted" },
+      { label: "Missing Docs", value: "7 missing", note: "Missing evidence blocks lender-ready packet status" },
+      { label: "Review-Required Docs", value: "10 queued", note: "Uploaded and classified docs stay here until approved" },
+      { label: "Expired Docs", value: "2 flagged", note: "Expired evidence is treated as unusable until refreshed" },
+      { label: "Next Best Action", value: "Resolve missing appraisal/title/permit package" },
+    ],
+  },
+  "/project-control/rag-index": {
+    status: "CITED ONLY",
+    statusColor: "var(--accent, #3b82f6)",
+    badges: ["Indexed", "Unindexed", "Citation Required"],
+    reviewWarning: "RAG answers must cite indexed source documents. Unindexed or missing evidence cannot be inferred or hallucinated.",
+    items: [
+      { label: "RAG Indexed Docs", value: "17 indexed" },
+      { label: "Unindexed Docs", value: "3 unindexed", note: "Blocked or rejected documents are not searchable" },
+      { label: "Citation Payload", value: "document ID + title + chunk ID + relevance" },
+      { label: "Chunk Strategy", value: "Safe deterministic placeholder chunks" },
+      { label: "Search Mode", value: "Mock deterministic search", note: "Vector adapter reserved for later phase" },
+      { label: "Next Best Action", value: "Index accepted lender and ESG evidence first" },
+    ],
+  },
+  "/project-control/lender-packet": {
+    status: "NOT LENDER READY",
+    statusColor: "var(--warning, #d97706)",
+    badges: ["Missing", "Lender Ready", "Not Lender Ready", "Human Approval Required"],
+    reviewWarning: "Lender-ready status is blocked by unresolved PoF gaps, missing evidence, missing lender authorizations, estimated incentives, or incomplete legal/accounting review.",
+    items: [
+      { label: "Lender Packet Readiness Score", value: "68 / 100" },
+      { label: "Blocked Reasons", value: "PoF gap, incentive estimate, pending legal review" },
+      { label: "Missing Required Docs", value: "Permit set, human approval log" },
+      { label: "Review-Required Docs", value: "Blockchain proof references + legal opinion" },
+      { label: "Lender Use Authorization", value: "Required before lender-ready" },
+      { label: "Next Best Action", value: "Close PoF gap and complete lender authorization package" },
+    ],
+  },
+  "/project-control/incentive-evidence": {
+    status: "UPLOADED",
+    statusColor: "var(--accent, #3b82f6)",
+    badges: ["Estimated", "Application Ready", "Submitted", "Awarded", "Verified"],
+    reviewWarning: "Estimated incentive values never count as verified funds. Incentive evidence must move through reviewed stages.",
+    items: [
+      { label: "Incentive Evidence Status", value: "application_ready" },
+      { label: "Required Docs", value: "Tax estimate, utility docs, energy audit, contractor scope, equipment spec, owner eligibility" },
+      { label: "Submitted / Awarded", value: "Awaiting application package and award evidence" },
+      { label: "Verified Funds", value: "0", note: "Becomes non-zero only after award + accounting review + proof of installation" },
+      { label: "Review-Required Docs", value: "Accounting review pending" },
+      { label: "Next Best Action", value: "Move eligible incentive packets from application_ready to submitted" },
+    ],
+  },
+  "/project-control/submission-readiness": {
+    status: "HUMAN APPROVAL REQUIRED",
+    statusColor: "var(--warning, #d97706)",
+    badges: ["Accepted", "Blocked", "Human Approval Required"],
+    reviewWarning: "Real-world submission still requires lender, legal, accounting, and human approval. XRPL and blockchain references remain proof references only unless separately approved.",
+    items: [
+      { label: "Cross-Module Readiness", value: "Evidence + PoF + ESG + Funding + Incentives" },
+      { label: "Accepted Evidence", value: "9 documents" },
+      { label: "Blocked Reasons", value: "Missing permits, unresolved PoF gap, blockchain off-chain review" },
+      { label: "Incentive Status", value: "Estimated / submitted / awarded / verified separated" },
+      { label: "RAG Support", value: "Citations available only for indexed docs" },
+      { label: "Next Best Action", value: "Complete human approval log before external submission" },
+    ],
+  },
+};
+
 function Phase6Panel({ path }: { path: string }) {
   const panel = PHASE6_PANELS[path];
   if (!panel) return null;
@@ -204,6 +291,37 @@ function Phase6Panel({ path }: { path: string }) {
         {panel.badges.map((b) => (
           <span key={b} style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 6, padding: "3px 10px", fontSize: 11, color: "var(--muted)" }}>
             {b}
+          </span>
+        ))}
+      </div>
+      <div style={{ background: "var(--surface)", border: `1px solid ${panel.statusColor}`, borderRadius: 8, padding: "12px 16px", marginBottom: 20, fontSize: 13, color: panel.statusColor }}>
+        ⚠️ {panel.reviewWarning}
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 12 }}>
+        {panel.items.map((item) => (
+          <div key={item.label} style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 8, padding: "16px 18px" }}>
+            <div style={{ fontSize: 11, color: "var(--muted)", marginBottom: 6, textTransform: "uppercase", letterSpacing: 0.5 }}>{item.label}</div>
+            <div style={{ fontWeight: 600, fontSize: 13, color: "var(--text)" }}>{item.value}</div>
+            {item.note && <div style={{ fontSize: 11, color: "var(--muted)", marginTop: 4 }}>{item.note}</div>}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function Phase7Panel({ path }: { path: string }) {
+  const panel = PHASE7_PANELS[path];
+  if (!panel) return null;
+  return (
+    <div>
+      <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20, flexWrap: "wrap" }}>
+        <span style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 6, padding: "4px 14px", fontSize: 12, fontWeight: 700, color: panel.statusColor, letterSpacing: 0.5 }}>
+          {panel.status}
+        </span>
+        {panel.badges.map((badge) => (
+          <span key={badge} style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 6, padding: "3px 10px", fontSize: 11, color: "var(--muted)" }}>
+            {badge}
           </span>
         ))}
       </div>

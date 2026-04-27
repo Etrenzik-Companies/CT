@@ -1,4 +1,23 @@
 ﻿# Changelog
+## 0.8.0 - 2026-04-27
+
+### Phase 7 — Evidence Intake, RAG Index, Lender Packet Builder, and Incentive Evidence Mapping
+
+- Added `apps/api/src/evidence/`.
+  - Deterministic evidence classification, requirement mapping, missing/expired evidence gaps, and review-required links.
+  - Uploaded evidence is never treated as accepted by default.
+- Added `apps/api/src/ragIndex/`.
+  - Deterministic placeholder indexing, citation-first mock search, unindexed document reporting, and no hallucinated missing evidence.
+- Added `apps/api/src/incentiveEvidence/`.
+  - Incentive evidence stage mapping: `estimated`, `application_ready`, `submitted`, `awarded`, `verified`, `rejected`, `expired`.
+  - Estimated incentives remain excluded from verified funds.
+- Added `apps/api/src/lenderPacket/`.
+  - Packet section builder, readiness score, missing evidence detection, PoF gap blocking, lender authorization gating, and blockchain off-chain review checks.
+- Updated `apps/web/src/App.tsx` and `apps/web/src/project-control-pages.ts`.
+  - Added five new dashboard modules: Evidence Intake, RAG Index, Lender Packet, Incentive Evidence, and Submission Readiness.
+- Added docs `17-evidence-intake-rag-index.md`, `18-lender-packet-builder.md`, and `19-incentive-evidence-and-submission-readiness.md`.
+- Updated documentation indexes and roadmap for Phase 7.
+
 ## 0.7.1 - 2026-04-27
 
 ### Post-Deployment Hardening

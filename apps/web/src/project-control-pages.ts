@@ -19,4 +19,9 @@ export const PROJECT_CONTROL_PAGES = [
   "/project-control/incentive-intelligence",
   "/project-control/esg-scorecard",
   "/project-control/funding-match",
+  "/project-control/evidence-intake",
+  "/project-control/rag-index",
+  "/project-control/lender-packet",
+  "/project-control/incentive-evidence",
+  "/project-control/submission-readiness",
 ] as const;

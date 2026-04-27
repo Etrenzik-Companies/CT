@@ -18,6 +18,9 @@
 | 🟢 | Incentive + ESG Map | 14-tax-incentive-esg-funding-source-map.md | Tax incentive programs, ESG metric weights, stacking rules |
 | 🟢 | Lender Submission Guide | 15-lender-submission-and-pof-readiness.md | PoF readiness checklist, lender submission workflow |
 | ⚫ | Security Hardening | 16-post-deployment-security-hardening.md | Post-deployment hardening, token rotation, and repo hygiene |
+| 🟢 | Evidence + RAG Index | 17-evidence-intake-rag-index.md | Evidence intake, registry status, and citation-first RAG indexing |
+| 🟢 | Lender Packet Builder | 18-lender-packet-builder.md | Lender packet sections, readiness score, and blocking rules |
+| 🟢 | Incentive Evidence + Submission | 19-incentive-evidence-and-submission-readiness.md | Incentive evidence stages and submission readiness rules |
 
 ## Project Control Specs
 
