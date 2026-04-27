@@ -27,6 +27,9 @@
 | 🟢 | Contractor + Trade Matrix | 23-contractor-and-trade-funding-readiness-matrix.md | Lender-grade contractor and trade evidence gates tied to funding/draw readiness |
 | 🟢 | Funding Routes + RWA Stack | 24-funding-routes-and-rwa-capital-stack.md | Funding route taxonomy with verified/estimated/obligation separation and RWA route controls |
 | 🟢 | Lender Evidence Master Checklist | 25-lender-evidence-master-checklist.md | Complete lender checklist across contractors, trades, documents, evidence, routes, and blockers |
+| 🟢 | Real Evidence Intake Inbox | 26-real-evidence-intake-inbox.md | Document intake engine — classify, block secrets, map to requirements; uploaded ≠ accepted |
+| 🟢 | Evidence-to-Requirement Mapping | 27-evidence-to-requirement-mapping.md | Rules that map evidence files to 36 specific requirements across all funding/compliance domains |
+| 🟢 | Real Lender Packet Status Engine | 28-real-lender-packet-status-engine.md | 8-category packet completeness engine with lender-ready gates: accepted + reviewed + authorized |
 
 ## Project Control Specs
 

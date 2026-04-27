@@ -38,4 +38,11 @@ export const PROJECT_CONTROL_PAGES = [
   "/project-control/lender-evidence-checklist",
   "/project-control/draw-package-readiness",
   "/project-control/funding-gap-map",
+  "/project-control/evidence-inbox",
+  "/project-control/evidence-mapping",
+  "/project-control/packet-status",
+  "/project-control/accepted-evidence",
+  "/project-control/blocked-evidence",
+  "/project-control/review-queue",
+  "/project-control/real-lender-packet",
 ] as const;

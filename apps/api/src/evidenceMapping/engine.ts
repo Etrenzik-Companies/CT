@@ -1,0 +1,380 @@
+// ── Evidence Mapping — Engine ────────────────────────────────────────────
+// Connects evidence files to specific requirements.
+// Mapping status is always "pending" — never auto-accepted.
+
+import type {
+  EvidenceMappingInput,
+  EvidenceMappingReport,
+  EvidenceMappingResult,
+  MappingConfidenceLevel,
+  RequirementId,
+} from "./types.js";
+
+interface RequirementRule {
+  requirementId: RequirementId;
+  targetModule: string;
+  keywords: RegExp;
+  confidence: MappingConfidenceLevel;
+  missingFields: string[];
+  blockers: string[];
+  nextAction: string;
+}
+
+const REQUIREMENT_RULES: RequirementRule[] = [
+  {
+    requirementId: "gc_insurance",
+    targetModule: "contractorMatrix",
+    keywords: /insurance|cert.*of.*ins|coi|acord/i,
+    confidence: "high",
+    missingFields: [],
+    blockers: [],
+    nextAction: "Route to GC package reviewer. Verify coverage limits and additional insured endorsement.",
+  },
+  {
+    requirementId: "gc_bid",
+    targetModule: "contractorMatrix",
+    keywords: /gc[_\-\s]?bid|general.*contractor.*bid|bid.*package/i,
+    confidence: "high",
+    missingFields: [],
+    blockers: [],
+    nextAction: "Route to GC package reviewer. Verify scope, schedule, and cost alignment.",
+  },
+  {
+    requirementId: "gc_license",
+    targetModule: "contractorMatrix",
+    keywords: /gc[_\-\s]?licens|contractor.*licens|state.*licens/i,
+    confidence: "high",
+    missingFields: [],
+    blockers: [],
+    nextAction: "Verify license number against state registry. Mark verified only after confirmation.",
+  },
+  {
+    requirementId: "gc_scope_of_work",
+    targetModule: "contractorMatrix",
+    keywords: /scope.*of.*work|sow|gc.*scope/i,
+    confidence: "high",
+    missingFields: [],
+    blockers: [],
+    nextAction: "Review scope alignment with permit drawings and budget.",
+  },
+  {
+    requirementId: "gc_w9",
+    targetModule: "contractorMatrix",
+    keywords: /w-?9.*gc|gc.*w-?9/i,
+    confidence: "medium",
+    missingFields: [],
+    blockers: [],
+    nextAction: "Store securely. Required for tax reporting. Route to accounting.",
+  },
+  {
+    requirementId: "trade_license",
+    targetModule: "contractorMatrix",
+    keywords: /trade.*licens|electrical.*licens|plumbing.*licens|hvac.*licens|mechanical.*licens/i,
+    confidence: "high",
+    missingFields: [],
+    blockers: [],
+    nextAction: "Verify license against state/local registry before marking accepted.",
+  },
+  {
+    requirementId: "trade_scope",
+    targetModule: "contractorMatrix",
+    keywords: /trade.*scope|sub.*scope|subcontractor.*scope/i,
+    confidence: "medium",
+    missingFields: [],
+    blockers: [],
+    nextAction: "Review against GC scope and design drawings.",
+  },
+  {
+    requirementId: "trade_bid",
+    targetModule: "contractorMatrix",
+    keywords: /trade.*bid|sub.*bid|subcontractor.*bid/i,
+    confidence: "high",
+    missingFields: [],
+    blockers: [],
+    nextAction: "Review trade bid for coverage and pricing. Compare to budget line items.",
+  },
+  {
+    requirementId: "trade_w9",
+    targetModule: "contractorMatrix",
+    keywords: /w-?9.*trade|trade.*w-?9|w-?9.*sub|sub.*w-?9/i,
+    confidence: "medium",
+    missingFields: [],
+    blockers: [],
+    nextAction: "Store securely. Route to accounting.",
+  },
+  {
+    requirementId: "appraisal",
+    targetModule: "fundingRoutes",
+    keywords: /appraisal|as[-\s]?is.*value|as[-\s]?complete.*value|maisie|apprais/i,
+    confidence: "high",
+    missingFields: [],
+    blockers: [],
+    nextAction: "Route to lender underwriting. Verify certification and effective date.",
+  },
+  {
+    requirementId: "title_search",
+    targetModule: "fundingRoutes",
+    keywords: /title.*search|title.*report|preliminary.*title|commitment.*title/i,
+    confidence: "high",
+    missingFields: [],
+    blockers: [],
+    nextAction: "Route to lender. Verify exceptions, liens, and encumbrances.",
+  },
+  {
+    requirementId: "survey",
+    targetModule: "fundingRoutes",
+    keywords: /survey|alta.*survey|boundary.*survey|topograph/i,
+    confidence: "high",
+    missingFields: [],
+    blockers: [],
+    nextAction: "Route to lender and permit team. Verify certification.",
+  },
+  {
+    requirementId: "permit_set",
+    targetModule: "permits",
+    keywords: /permit.*set|building.*permit|permit.*drawings|permit.*plans/i,
+    confidence: "high",
+    missingFields: [],
+    blockers: [],
+    nextAction: "Confirm issuance with jurisdiction. Permit approval does not auto-unlock construction financing.",
+  },
+  {
+    requirementId: "zoning_confirmation",
+    targetModule: "permits",
+    keywords: /zoning.*confirm|zoning.*letter|use.*permit|zoning.*approv/i,
+    confidence: "high",
+    missingFields: [],
+    blockers: [],
+    nextAction: "Verify against current parcel zoning. Route to lender for review.",
+  },
+  {
+    requirementId: "utility_confirmation",
+    targetModule: "permits",
+    keywords: /utility.*confirm|service.*agreement|utility.*letter|capacity.*confirm/i,
+    confidence: "high",
+    missingFields: [],
+    blockers: [],
+    nextAction: "Route to lender. Verify service provider confirmation and timing.",
+  },
+  {
+    requirementId: "bank_statement",
+    targetModule: "fundingRoutes",
+    keywords: /bank.*statement|account.*statement|deposit.*statement/i,
+    confidence: "high",
+    missingFields: [],
+    blockers: ["Financial document — must remain confidential."],
+    nextAction: "Route to lender equity review team only. Do not share broadly.",
+  },
+  {
+    requirementId: "escrow_letter",
+    targetModule: "fundingRoutes",
+    keywords: /escrow.*letter|escrow.*confirm|funds.*escrow/i,
+    confidence: "high",
+    missingFields: [],
+    blockers: [],
+    nextAction: "Route to lender equity review. Verify escrow holder and balance.",
+  },
+  {
+    requirementId: "lender_term_sheet",
+    targetModule: "fundingRoutes",
+    keywords: /term.*sheet|loan.*commit|financing.*commit/i,
+    confidence: "high",
+    missingFields: [],
+    blockers: [],
+    nextAction: "Route to legal review. Verify conditions and expiration.",
+  },
+  {
+    requirementId: "grant_award_letter",
+    targetModule: "incentives",
+    keywords: /grant.*award|award.*letter|notice.*award/i,
+    confidence: "high",
+    missingFields: [],
+    blockers: [],
+    nextAction: "Route to accounting and lender. Grant awarded ≠ grant funded — verify disbursement timing.",
+  },
+  {
+    requirementId: "tax_credit_estimate",
+    targetModule: "incentives",
+    keywords: /tax.*credit.*estim|estimated.*tax.*credit|itc.*estim|ptc.*estim/i,
+    confidence: "medium",
+    missingFields: ["certification", "CPA memo"],
+    blockers: ["Estimated tax credit does not count as verified funds."],
+    nextAction: "Route to CPA/tax advisor. Estimated value only — do not count as verified.",
+  },
+  {
+    requirementId: "energy_model",
+    targetModule: "incentives",
+    keywords: /energy.*model|energy.*simul|equest|doe-2|energyplus/i,
+    confidence: "high",
+    missingFields: [],
+    blockers: [],
+    nextAction: "Route to energy consultant and 179D/48E reviewer.",
+  },
+  {
+    requirementId: "certification_179d",
+    targetModule: "incentives",
+    keywords: /179d|179-d|energy.*deduct.*certif/i,
+    confidence: "high",
+    missingFields: [],
+    blockers: [],
+    nextAction: "Route to CPA and lender. Requires qualified third-party certification.",
+  },
+  {
+    requirementId: "equipment_specs_48e",
+    targetModule: "incentives",
+    keywords: /48e|equipment.*spec.*energy|clean.*energy.*credit.*equip/i,
+    confidence: "medium",
+    missingFields: ["manufacturer certification"],
+    blockers: [],
+    nextAction: "Route to energy consultant and tax advisor. Verify eligibility.",
+  },
+  {
+    requirementId: "ev_charging_specs",
+    targetModule: "esg",
+    keywords: /ev.*charg.*spec|electric.*vehicle.*charg|evse.*spec/i,
+    confidence: "high",
+    missingFields: [],
+    blockers: [],
+    nextAction: "Route to ESG and incentive reviewers.",
+  },
+  {
+    requirementId: "bond_tif_public_body_approval",
+    targetModule: "indianaPrograms",
+    keywords: /bond.*approv|tif.*approv|public.*finance.*approv|municipal.*bond/i,
+    confidence: "high",
+    missingFields: [],
+    blockers: [],
+    nextAction: "Route to legal and public-finance advisor. Verify adopting resolution.",
+  },
+  {
+    requirementId: "city_county_support_letter",
+    targetModule: "indianaPrograms",
+    keywords: /city.*letter|county.*letter|support.*letter|municipal.*support/i,
+    confidence: "high",
+    missingFields: [],
+    blockers: [],
+    nextAction: "Route to lender government-relations review.",
+  },
+  {
+    requirementId: "legal_memo",
+    targetModule: "lenderPacket",
+    keywords: /legal.*memo|attorney.*opinion|counsel.*memo/i,
+    confidence: "high",
+    missingFields: [],
+    blockers: ["Legal document — attorney review required."],
+    nextAction: "Route to designated attorney for review and signature.",
+  },
+  {
+    requirementId: "tax_memo",
+    targetModule: "lenderPacket",
+    keywords: /tax.*memo|cpa.*memo|accounting.*opinion/i,
+    confidence: "high",
+    missingFields: [],
+    blockers: ["Tax document — CPA review required."],
+    nextAction: "Route to CPA for review and signature.",
+  },
+  {
+    requirementId: "accounting_memo",
+    targetModule: "lenderPacket",
+    keywords: /accounting.*memo|financial.*memo|controller.*memo/i,
+    confidence: "medium",
+    missingFields: [],
+    blockers: [],
+    nextAction: "Route to accountant for review.",
+  },
+  {
+    requirementId: "human_approval_log",
+    targetModule: "lenderPacket",
+    keywords: /human.*approv|approval.*log|sign.*off.*log/i,
+    confidence: "high",
+    missingFields: [],
+    blockers: [],
+    nextAction: "Attach to lender packet. Verify signatory authority.",
+  },
+  {
+    requirementId: "pof_document",
+    targetModule: "pof",
+    keywords: /proof.*of.*fund|pof.*letter|proof.*fund.*letter/i,
+    confidence: "high",
+    missingFields: [],
+    blockers: [],
+    nextAction: "Route to PoF reviewer. Verify issuer, amount, and expiration.",
+  },
+  {
+    requirementId: "rwa_legal_review",
+    targetModule: "rwaFundingRoutes",
+    keywords: /rwa.*legal|tokeniz.*legal|securities.*memo|legal.*review.*token/i,
+    confidence: "high",
+    missingFields: [],
+    blockers: ["Tokenized securities require legal review before any use."],
+    nextAction: "Route to securities attorney. RWA legal review required before any transaction.",
+  },
+  {
+    requirementId: "xrpl_proof_reference",
+    targetModule: "rwaFundingRoutes",
+    keywords: /xrpl.*proof|xrpl.*reference|ledger.*proof|blockchain.*proof/i,
+    confidence: "medium",
+    missingFields: ["off-chain legal review"],
+    blockers: ["XRPL proof reference is not spendable funds. Requires separate legal review."],
+    nextAction: "Route to RWA legal and lender. Does not count as spendable funding.",
+  },
+  {
+    requirementId: "esg_certification",
+    targetModule: "esg",
+    keywords: /esg.*certif|leed.*certif|green.*certif|sustainability.*certif/i,
+    confidence: "high",
+    missingFields: [],
+    blockers: [],
+    nextAction: "Route to ESG reviewer and lender sustainability desk.",
+  },
+  {
+    requirementId: "code_compliance_report",
+    targetModule: "codeCompliance",
+    keywords: /code.*compliance|building.*code.*report|compliance.*inspect/i,
+    confidence: "high",
+    missingFields: [],
+    blockers: [],
+    nextAction: "Route to code compliance reviewer and permit team.",
+  },
+  {
+    requirementId: "fire_life_safety_report",
+    targetModule: "codeCompliance",
+    keywords: /fire.*life.*safety|fire.*safety.*report|life.*safety.*inspect/i,
+    confidence: "high",
+    missingFields: [],
+    blockers: [],
+    nextAction: "Route to fire marshal and code compliance reviewer.",
+  },
+];
+
+export function mapEvidenceToRequirements(input: EvidenceMappingInput): EvidenceMappingReport {
+  const combined = `${input.filename} ${input.submittedLabel} ${(input.detectedKeywords ?? []).join(" ")}`;
+
+  const mappings: EvidenceMappingResult[] = [];
+
+  for (const rule of REQUIREMENT_RULES) {
+    if (rule.keywords.test(combined)) {
+      mappings.push({
+        evidenceId: input.evidenceId,
+        requirementId: rule.requirementId,
+        targetModule: rule.targetModule,
+        confidence: rule.confidence,
+        reviewStatus: "pending",
+        missingFields: rule.missingFields,
+        blockers: rule.blockers,
+        nextAction: rule.nextAction,
+      });
+    }
+  }
+
+  return {
+    evidenceId: input.evidenceId,
+    filename: input.filename,
+    mappings,
+    unmappedWarning: mappings.length === 0,
+  };
+}
+
+export function mapEvidenceBatch(inputs: EvidenceMappingInput[]): EvidenceMappingReport[] {
+  return inputs.map(mapEvidenceToRequirements);
+}
