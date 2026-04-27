@@ -24,4 +24,11 @@ export const PROJECT_CONTROL_PAGES = [
   "/project-control/lender-packet",
   "/project-control/incentive-evidence",
   "/project-control/submission-readiness",
+  "/project-control/indiana-program-matrix",
+  "/project-control/esg-incentives-indiana",
+  "/project-control/grants-public-funding",
+  "/project-control/bonds-tif-redevelopment",
+  "/project-control/hotel-local-taxes",
+  "/project-control/code-compliance-indiana",
+  "/project-control/evidence-gaps-indiana",
 ] as const;

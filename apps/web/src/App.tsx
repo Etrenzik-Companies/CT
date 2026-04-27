@@ -2,6 +2,13 @@ import { Routes, Route, NavLink, useNavigate } from "react-router-dom";
 import { PROJECT_CONTROL_PAGES } from "./project-control-pages";
 
 const PAGE_META: Record<string, { label: string; icon: string; desc: string }> = {
+  "/project-control/indiana-program-matrix": { label: "Indiana Program Matrix", icon: "🧮", desc: "Official-source matrix across incentives, grants, taxes, code compliance, and public finance." },
+  "/project-control/esg-incentives-indiana": { label: "ESG Incentives", icon: "⚡", desc: "Federal and Indiana ESG/energy incentive screening with evidence gates and value-stage separation." },
+  "/project-control/grants-public-funding": { label: "Grants & Public Funding", icon: "🏛️", desc: "State, local, environmental, and workforce grant pathways with monitor-only controls." },
+  "/project-control/bonds-tif-redevelopment": { label: "Bonds / TIF / Redevelopment", icon: "🏗", desc: "Carmel/Hamilton public-finance pathways with public-body approval evidence requirements." },
+  "/project-control/hotel-local-taxes": { label: "Hotel & Local Taxes", icon: "🧾", desc: "Operating tax obligations (not funding) for lodging, innkeeper tax, sales/use, and property-tax review." },
+  "/project-control/code-compliance-indiana": { label: "Code Compliance", icon: "📐", desc: "Carmel permit workflow and Indiana building/fire/energy code compliance gates." },
+  "/project-control/evidence-gaps-indiana": { label: "Evidence Gaps", icon: "🔍", desc: "Evidence checklist to move items from possible to verified in lender-safe sequence." },
   "/project-control/evidence-intake":      { label: "Evidence Intake",       icon: "🗂️", desc: "Document intake registry for lender, ESG, incentive, and asset evidence." },
   "/project-control/rag-index":            { label: "RAG Index",             icon: "📚", desc: "Indexed evidence citations with deterministic placeholder search." },
   "/project-control/lender-packet":        { label: "Lender Packet",         icon: "📁", desc: "Lender packet readiness, missing evidence, and review blockers." },
@@ -101,8 +108,18 @@ function SectionPage({ path }: { path: string }) {
     "/project-control/incentive-evidence",
     "/project-control/submission-readiness",
   ];
+  const indianaMatrixPaths = [
+    "/project-control/indiana-program-matrix",
+    "/project-control/esg-incentives-indiana",
+    "/project-control/grants-public-funding",
+    "/project-control/bonds-tif-redevelopment",
+    "/project-control/hotel-local-taxes",
+    "/project-control/code-compliance-indiana",
+    "/project-control/evidence-gaps-indiana",
+  ];
   const isPhase6 = phase6Paths.includes(path);
   const isPhase7 = phase7Paths.includes(path);
+  const isIndianaMatrix = indianaMatrixPaths.includes(path);
   return (
     <div style={S.page}>
       <div style={S.breadcrumb}>
@@ -114,7 +131,8 @@ function SectionPage({ path }: { path: string }) {
       <p style={S.subtitle}>{meta?.desc}</p>
       {isPhase6 && <Phase6Panel path={path} />}
       {isPhase7 && <Phase7Panel path={path} />}
-      {!isPhase6 && !isPhase7 && (
+      {isIndianaMatrix && <IndianaMatrixPanel path={path} />}
+      {!isPhase6 && !isPhase7 && !isIndianaMatrix && (
         <div style={S.placeholder}>
           <div style={{ fontSize: 48, marginBottom: 16 }}>{meta?.icon}</div>
           <div style={{ color: "var(--muted)" }}>This module is under active development.</div>
@@ -279,6 +297,112 @@ const PHASE7_PANELS: Record<string, { status: string; statusColor: string; badge
   },
 };
 
+const INDIANA_MATRIX_PANELS: Record<string, { status: string; statusColor: string; badges: string[]; reviewWarning: string; items: Array<{ label: string; value: string; note?: string }> }> = {
+  "/project-control/indiana-program-matrix": {
+    status: "OFFICIAL-SOURCE SCREENING",
+    statusColor: "var(--accent, #3b82f6)",
+    badges: ["State", "Federal", "Local", "Tax", "Code", "Evidence"],
+    reviewWarning: "Taxes and code requirements are obligations, not funding sources. Estimated incentives are never treated as verified funds.",
+    items: [
+      { label: "Total Programs Screened", value: "38" },
+      { label: "Likely Matches", value: "0", note: "Conservative by design until evidence matures" },
+      { label: "Possible + Needs Review", value: "19" },
+      { label: "Monitor-Only Items", value: "11" },
+      { label: "Blocked/Not Applicable", value: "8" },
+      { label: "Missing Evidence Count", value: "120+", note: "Address + parcel + zoning + utility + approvals are primary gaps" },
+      { label: "Verified Funding Amount", value: "$0" },
+      { label: "Estimated Funding Amount", value: "$0 (placeholder until evidence-linked amounts entered)" },
+      { label: "Awarded Funding Amount", value: "$0" },
+      { label: "Not-Counted Amount", value: "$0" },
+      { label: "Next Best Action", value: "Complete parcel, zoning, utility, and IEDC pre-screen evidence" },
+    ],
+  },
+  "/project-control/esg-incentives-indiana": {
+    status: "EVIDENCE GATED",
+    statusColor: "var(--success, #16a34a)",
+    badges: ["179D", "48E", "30C", "DSIRE", "DOE", "C-PACE Monitor"],
+    reviewWarning: "179D, 48E, and 30C remain needs_review until model/spec/placed-in-service/tax-ownership evidence and tax review are complete.",
+    items: [
+      { label: "Federal ESG Paths", value: "179D, 48E, 48E(h), 30C, transferability review" },
+      { label: "Registry Sources", value: "DOE Financing Navigator + DSIRE" },
+      { label: "C-PACE Status", value: "monitor_only", note: "Requires local authorization + lender consent" },
+      { label: "Estimated vs Verified", value: "Separated by stage", note: "estimated/application_ready/submitted/awarded/verified/not_counted" },
+      { label: "Counts As Verified Funds", value: "Only verified" },
+      { label: "Next Best Action", value: "Upload energy model, specs, placed-in-service plan, and tax memo" },
+    ],
+  },
+  "/project-control/grants-public-funding": {
+    status: "NEEDS REVIEW",
+    statusColor: "var(--warning, #d97706)",
+    badges: ["SEF", "IDGF", "Brownfield", "SRF", "EPA", "OCRA Monitor"],
+    reviewWarning: "Grant programs are not verified funding until awarded, documented, and reviewed.",
+    items: [
+      { label: "Indiana Grant Tracks", value: "SEF, IDGF, Engineering, Community Collaboration" },
+      { label: "Environmental Tracks", value: "IFA Brownfields RLF, SRF, EPA Brownfields (monitor until site qualifies)" },
+      { label: "OCRA CDBG", value: "monitor_only", note: "Carmel path may be limited without specific qualification" },
+      { label: "SEF Gate", value: "jobs + payroll + training plan + IEDC contract evidence" },
+      { label: "Brownfield Gate", value: "Phase I/Phase II + environmental determination evidence" },
+      { label: "Next Best Action", value: "Build training packet and environmental diligence packet" },
+    ],
+  },
+  "/project-control/bonds-tif-redevelopment": {
+    status: "PUBLIC APPROVAL REQUIRED",
+    statusColor: "var(--warning, #d97706)",
+    badges: ["Carmel", "Hamilton County", "Bond", "TIF", "Redevelopment"],
+    reviewWarning: "Bonds/TIF/redevelopment pathways remain needs_review until public-body approvals and formal finance documents are in evidence.",
+    items: [
+      { label: "Local Finance Paths", value: "Carmel support, CRC/TIF monitor, bond-bank monitor, Hamilton EDC financing" },
+      { label: "Required Public Records", value: "city/county support letter + resolution + hearing/approval records" },
+      { label: "Finance Docs", value: "term sheet + underwriting assumptions + counsel review" },
+      { label: "Status", value: "needs_review" },
+      { label: "Tourism/Hospitality Support", value: "possible path with county/public finance evidence" },
+      { label: "Next Best Action", value: "Obtain local support letter and formal approval timeline" },
+    ],
+  },
+  "/project-control/hotel-local-taxes": {
+    status: "OBLIGATION TRACK",
+    statusColor: "var(--muted, #6b7280)",
+    badges: ["Sales Tax", "Innkeeper Tax", "F&B", "Property", "Use Tax"],
+    reviewWarning: "Hotel and local taxes are operating obligations and never increase funding readiness.",
+    items: [
+      { label: "Obligations", value: "Indiana sales tax on lodging, Hamilton County innkeeper tax, F&B tax if applicable" },
+      { label: "Additional Reviews", value: "Property tax/abatement, sales-use on materials and FF&E, payroll withholding, TPP tax" },
+      { label: "Funding Treatment", value: "not_counted", note: "These are not incentives" },
+      { label: "Evidence Needed", value: "Tax/accounting memo + legal memo" },
+      { label: "Effect on Lender Ready", value: "Can block readiness if unresolved" },
+      { label: "Next Best Action", value: "Finalize tax memo package by operating and construction category" },
+    ],
+  },
+  "/project-control/code-compliance-indiana": {
+    status: "BLOCKING GATES",
+    statusColor: "var(--warning, #d97706)",
+    badges: ["Permits", "Zoning", "Fire", "Energy", "ADA", "Health"],
+    reviewWarning: "Code and permit gaps block lender-ready status until required applications and reviews are complete.",
+    items: [
+      { label: "Carmel Workflow", value: "Building Safety permits, inspections, ILP/building permit sequencing" },
+      { label: "State Code Coverage", value: "Indiana building, fire, mechanical, fuel gas, electrical, energy conservation" },
+      { label: "Other Required Reviews", value: "ADA/accessibility, elevator/lift, stormwater/engineering, sign permits, health/pool/food service" },
+      { label: "Blocking Rule", value: "Any required unresolved code item blocks lender-ready" },
+      { label: "Current Status", value: "blocked until permit/compliance evidence is present" },
+      { label: "Next Best Action", value: "Submit permits and capture plan-review status in evidence registry" },
+    ],
+  },
+  "/project-control/evidence-gaps-indiana": {
+    status: "ACTION QUEUE",
+    statusColor: "var(--accent, #3b82f6)",
+    badges: ["Address/Parcel", "Zoning", "Utility", "IEDC", "Public Approval", "Human Approval"],
+    reviewWarning: "No item can move to verified without required evidence and human/legal/accounting review sign-off.",
+    items: [
+      { label: "Core Missing Evidence", value: "project address/parcel, zoning district, utility territory" },
+      { label: "Incentive Gaps", value: "energy model, equipment specs, placed-in-service facts, tax ownership" },
+      { label: "State Program Gaps", value: "job schedule, payroll estimates, IEDC application evidence" },
+      { label: "Public Finance Gaps", value: "city/county support letter, public-body approvals, bond/TIF resolution" },
+      { label: "Compliance Gaps", value: "permit applications, code review status, ADA and health review evidence" },
+      { label: "Next Best Action", value: "Work evidence checklist in priority order until lender-ready blockers are cleared" },
+    ],
+  },
+};
+
 function Phase6Panel({ path }: { path: string }) {
   const panel = PHASE6_PANELS[path];
   if (!panel) return null;
@@ -312,6 +436,37 @@ function Phase6Panel({ path }: { path: string }) {
 
 function Phase7Panel({ path }: { path: string }) {
   const panel = PHASE7_PANELS[path];
+  if (!panel) return null;
+  return (
+    <div>
+      <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20, flexWrap: "wrap" }}>
+        <span style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 6, padding: "4px 14px", fontSize: 12, fontWeight: 700, color: panel.statusColor, letterSpacing: 0.5 }}>
+          {panel.status}
+        </span>
+        {panel.badges.map((badge) => (
+          <span key={badge} style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 6, padding: "3px 10px", fontSize: 11, color: "var(--muted)" }}>
+            {badge}
+          </span>
+        ))}
+      </div>
+      <div style={{ background: "var(--surface)", border: `1px solid ${panel.statusColor}`, borderRadius: 8, padding: "12px 16px", marginBottom: 20, fontSize: 13, color: panel.statusColor }}>
+        ⚠️ {panel.reviewWarning}
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 12 }}>
+        {panel.items.map((item) => (
+          <div key={item.label} style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 8, padding: "16px 18px" }}>
+            <div style={{ fontSize: 11, color: "var(--muted)", marginBottom: 6, textTransform: "uppercase", letterSpacing: 0.5 }}>{item.label}</div>
+            <div style={{ fontWeight: 600, fontSize: 13, color: "var(--text)" }}>{item.value}</div>
+            {item.note && <div style={{ fontSize: 11, color: "var(--muted)", marginTop: 4 }}>{item.note}</div>}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function IndianaMatrixPanel({ path }: { path: string }) {
+  const panel = INDIANA_MATRIX_PANELS[path];
   if (!panel) return null;
   return (
     <div>

@@ -50,6 +50,12 @@
   - Incentive evidence staging from `estimated` through `verified` with verified-funds separation.
   - Five new web modules: Evidence Intake, RAG Index, Lender Packet, Incentive Evidence, Submission Readiness.
 
+- 🟡 **Phase 7.1 — Indiana Official-Source Matrix Layer** (`0.8.1`)
+  - Added deterministic Indiana matrix engine for ESG incentives, grants, bonds/TIF/redevelopment, hotel/local taxes, and code compliance.
+  - Added evidence-gated status model: `likely_match | possible_match | monitor_only | not_applicable | blocked | needs_review | verified`.
+  - Enforced lender-safe value stages: `estimated | application_ready | submitted | awarded | verified | not_counted`.
+  - Added seven new dashboard modules for Indiana matrix operations and evidence-gap actioning.
+
 ## Planned
 
 - ⚪ **Phase 8 — Funding Diligence and Submission Ops**

@@ -21,6 +21,9 @@
 | 🟢 | Evidence + RAG Index | 17-evidence-intake-rag-index.md | Evidence intake, registry status, and citation-first RAG indexing |
 | 🟢 | Lender Packet Builder | 18-lender-packet-builder.md | Lender packet sections, readiness score, and blocking rules |
 | 🟢 | Incentive Evidence + Submission | 19-incentive-evidence-and-submission-readiness.md | Incentive evidence stages and submission readiness rules |
+| 🟢 | Indiana Project Brief | 20-clay-terrace-indiana-project-brief.md | Source-grounded Clay Terrace project profile, Indiana incentive map, and evidence gaps |
+| 🟢 | Indiana Matrix | 21-indiana-esg-incentives-grants-bonds-tax-code-matrix.md | Official-source Indiana matrix for incentives, grants, public finance, taxes, code, and evidence gates |
+| 🟢 | Carmel/Hamilton Playbook | 22-carmel-hamilton-county-compliance-and-public-finance.md | Compliance and public-finance workflow for Carmel/Hamilton County lender-safe execution |
 
 ## Project Control Specs
 

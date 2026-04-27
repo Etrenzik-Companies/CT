@@ -1,4 +1,49 @@
 ﻿# Changelog
+## 0.8.2 - 2026-04-27
+
+### Indiana Official-Source Matrix Expansion
+
+- Added `apps/api/src/indianaPrograms/types.ts`.
+  - Introduced domain types for Indiana program matrix categories, statuses, source confidence, funding value treatment, tax requirements, code requirements, and Clay Terrace profile input.
+- Added `apps/api/src/indianaPrograms/engine.ts`.
+  - Implemented deterministic matrix assessment for Indiana state incentives, federal ESG/tax paths, brownfield/environmental tracks, Carmel/Hamilton public-finance tracks, taxes, and code-compliance obligations.
+  - Enforced strict separation between obligations and funding sources.
+  - Enforced evidence-gated transitions and prohibited estimated values from counting as verified funds.
+- Added `apps/api/src/indianaPrograms/engine.test.ts`.
+  - Added 11 deterministic tests covering innkeeper-tax obligation classification, 179D/48E evidence gating, HBI/EDGE/SEF gating, brownfield monitor-only behavior, C-PACE monitor-only behavior, bonds/TIF approval gating, funding-stage separation, code-gap lender blocking, and determinism.
+- Updated `apps/web/src/project-control-pages.ts` and `apps/web/src/App.tsx`.
+  - Added seven new dashboard modules:
+    - Indiana Program Matrix
+    - ESG Incentives
+    - Grants & Public Funding
+    - Bonds / TIF / Redevelopment
+    - Hotel & Local Taxes
+    - Code Compliance
+    - Evidence Gaps
+  - Added display treatment that keeps `estimated`, `submitted`, `awarded`, and `verified` values separate.
+- Added docs:
+  - `docs/21-indiana-esg-incentives-grants-bonds-tax-code-matrix.md`
+  - `docs/22-carmel-hamilton-county-compliance-and-public-finance.md`
+- Updated documentation and planning indexes:
+  - `docs/00-table-of-contents.md`
+  - `ROADMAP.md`
+
+## 0.8.1 - 2026-04-27
+
+### Indiana Project Profile and Incentive Alignment
+
+- Updated `apps/api/src/incentives/engine.ts`.
+  - Replaced Georgia-specific incentive entries with Indiana and Carmel-relevant entries for HBITC, Skills Enhancement Fund, local redevelopment support, Indiana C-PACE monitoring, and Indiana utility rebate screening.
+  - Replaced `45L` with `48E` for a hotel-oriented commercial clean-electric pathway.
+  - Improved next-step guidance so tax programs require tax review while non-tax programs require program-administrator confirmation.
+- Updated `apps/api/src/incentives/engine.test.ts`.
+  - Rebased tests from a Georgia construction scenario to a Carmel, Indiana hotel scenario.
+  - Added assertions for Indiana-specific matches and utility / tax next-step behavior.
+- Updated `docs/14-tax-incentive-esg-funding-source-map.md`.
+  - Re-anchored the incentive and ESG map to the Clay Terrace hotel in Carmel, Indiana using the current pro forma inputs.
+- Added `docs/20-clay-terrace-indiana-project-brief.md`.
+  - Captured the extracted hotel pro forma, capital stack, Indiana incentive stack, tax notes, ESG priorities, and remaining evidence gaps.
+
 ## 0.8.0 - 2026-04-27
 
 ### Phase 7 — Evidence Intake, RAG Index, Lender Packet Builder, and Incentive Evidence Mapping
