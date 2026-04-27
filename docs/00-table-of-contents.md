@@ -25,6 +25,7 @@
 | 🟡 | Permitting | permitting-workflow-spec.md | Permit and inspection workflow baseline |
 | 🟡 | Incentives | incentive-intelligence-spec.md | Incentive eligibility and confirmation rules |
 | 🟣 | MCP/RAG | mcp-agentic-rag-architecture.md | Agentic tool and retrieval architecture |
+| 🟢 | MCP Runtime | 12-mcp-tool-registry-runtime.md | Safe MCP runtime execution and approval model |
 | 🟣 | Agents | ai-agent-roles-and-permissions.md | Agent permission model |
 | 🟢 | Orchestrator | 11-agentic-orchestrator-foundation.md | Typed agentic orchestrator foundation and safety model |
 | 🟡 | Templates | reusable-project-template-engine.md | Reusable project instantiation rules |
