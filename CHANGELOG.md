@@ -1,4 +1,36 @@
 ﻿# Changelog
+## 0.8.4 - 2026-04-27
+
+### Phase 8 — Real Evidence Packet Intake
+
+- Added `apps/api/src/evidenceInbox/types.ts`, `apps/api/src/evidenceInbox/engine.ts`, and `apps/api/src/evidenceInbox/engine.test.ts`.
+  - 10 tests. Enforces `autoAccepted: false` literal at all times.
+  - Classifies file type, detects 10 secret patterns (private keys, seed phrases, API tokens, passwords, etc.) and blocks them as `secret_prohibited`.
+  - Infers preliminary mapping targets from 24 keyword rules.
+- Added `apps/api/src/evidenceMapping/types.ts`, `apps/api/src/evidenceMapping/engine.ts`, and `apps/api/src/evidenceMapping/engine.test.ts`.
+  - 10 tests. Maps evidence to 36 specific requirement IDs across contractor, trade, funding, RWA, incentive, compliance, and lender domains.
+  - All mapping results initialised with `reviewStatus: "pending"` — no auto-acceptance.
+  - Standing blockers on: `tax_credit_estimate`, `xrpl_proof_reference`, `rwa_legal_review`, `legal_memo`, `tax_memo`, `bond_tif_public_body_approval`.
+- Added `apps/api/src/packetStatus/types.ts`, `apps/api/src/packetStatus/engine.ts`, and `apps/api/src/packetStatus/engine.test.ts`.
+  - 8 tests. 8 categories: contractor, trade, funding, rwa, pof, esg_incentive, code_permit, lender.
+  - `lender_ready` requires: all evidence present + all accepted + professional review complete + no blockers + lender-use authorization on file.
+  - 10 professional-review-required items enforced.
+- Updated `apps/web/src/project-control-pages.ts` — added 7 new Phase 8 routes.
+- Updated `apps/web/src/App.tsx` — added `EVIDENCE_PACKET_PANELS`, `EvidencePacketPanel` component, and `isEvidencePacket` detection for 7 new dashboard modules:
+  - Evidence Inbox
+  - Evidence Mapping
+  - Packet Status
+  - Accepted Evidence
+  - Blocked Evidence
+  - Review Queue
+  - Real Lender Packet
+- Added docs:
+  - `docs/26-real-evidence-intake-inbox.md`
+  - `docs/27-evidence-to-requirement-mapping.md`
+  - `docs/28-real-lender-packet-status-engine.md`
+- Updated `docs/00-table-of-contents.md` with entries 26–28.
+- Updated `ROADMAP.md` with Phase 8 completed status.
+
 ## 0.8.3 - 2026-04-27
 
 ### Funding Control Room Expansion

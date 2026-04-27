@@ -65,9 +65,16 @@
 
 ## Planned
 
-- ⚪ **Phase 8 — Funding Diligence and Submission Ops**
-  - Lender outreach tracker, closing-conditions matrix, term-sheet comparison.
-  - Integration with clay terrace main repo funding data.
+
+- ✅ **Phase 8 — Real Evidence Packet Intake** (`0.8.4`, tag `feat/phase8-real-evidence-packet-intake`)
+  - Added Evidence Intake Inbox engine: classifies documents, detects and blocks 10 secret patterns, infers mapping targets from 24 keyword rules. `autoAccepted: false` enforced as literal type.
+  - Added Evidence-to-Requirement Mapping engine: 36 requirement IDs, 35 keyword rules, standing blockers on estimated incentives and RWA/XRPL references.
+  - Added Packet Status engine: 8 categories, 5 lender-ready gates (present + accepted + professional review + no blockers + authorization).
+  - 28 new tests (10 + 10 + 8). 10 professional-review-required items enforced.
+  - Seven new dashboard modules: Evidence Inbox, Evidence Mapping, Packet Status, Accepted Evidence, Blocked Evidence, Review Queue, Real Lender Packet.
+  - Added docs 26–28.
+
+## Planned
 
 - ⚪ **Phase 9 — Live Intake and Vector Indexing**
   - Real document upload flows, persistent index storage, and vector retrieval adapters.

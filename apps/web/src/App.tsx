@@ -9,6 +9,13 @@ const PAGE_META: Record<string, { label: string; icon: string; desc: string }> =
   "/project-control/lender-evidence-checklist": { label: "Lender Evidence Checklist", icon: "🗃️", desc: "Master lender package checklist across identity, site control, budget, contracts, taxes, and compliance." },
   "/project-control/draw-package-readiness": { label: "Draw Package Readiness", icon: "📤", desc: "Construction draw readiness with lien waiver, inspection, and schedule support checks." },
   "/project-control/funding-gap-map": { label: "Funding Gap Map", icon: "🧭", desc: "Separated funding buckets for verified, awarded, submitted, estimated, and obligations." },
+  "/project-control/evidence-inbox": { label: "Evidence Inbox", icon: "📥", desc: "Real evidence intake registry — classify, block secrets, and map documents to requirements." },
+  "/project-control/evidence-mapping": { label: "Evidence Mapping", icon: "🗺️", desc: "Maps uploaded evidence to specific funding, contractor, lender, and compliance requirements." },
+  "/project-control/packet-status": { label: "Packet Status", icon: "📊", desc: "Real lender-packet completeness by category — blocked until evidence accepted and reviewed." },
+  "/project-control/accepted-evidence": { label: "Accepted Evidence", icon: "✅", desc: "Evidence items that have been uploaded, reviewed, and accepted by an authorised reviewer." },
+  "/project-control/blocked-evidence": { label: "Blocked Evidence", icon: "🚫", desc: "Evidence items blocked due to secrets, missing review, or active compliance blockers." },
+  "/project-control/review-queue": { label: "Review Queue", icon: "⏳", desc: "Outstanding evidence items requiring human review before any lender-ready classification." },
+  "/project-control/real-lender-packet": { label: "Real Lender Packet", icon: "📋", desc: "Composite real lender packet status: accepted evidence + reviewed + no blockers required." },
   "/project-control/indiana-program-matrix": { label: "Indiana Program Matrix", icon: "🧮", desc: "Official-source matrix across incentives, grants, taxes, code compliance, and public finance." },
   "/project-control/esg-incentives-indiana": { label: "ESG Incentives", icon: "⚡", desc: "Federal and Indiana ESG/energy incentive screening with evidence gates and value-stage separation." },
   "/project-control/grants-public-funding": { label: "Grants & Public Funding", icon: "🏛️", desc: "State, local, environmental, and workforce grant pathways with monitor-only controls." },
@@ -133,10 +140,20 @@ function SectionPage({ path }: { path: string }) {
     "/project-control/draw-package-readiness",
     "/project-control/funding-gap-map",
   ];
+  const evidencePacketPaths = [
+    "/project-control/evidence-inbox",
+    "/project-control/evidence-mapping",
+    "/project-control/packet-status",
+    "/project-control/accepted-evidence",
+    "/project-control/blocked-evidence",
+    "/project-control/review-queue",
+    "/project-control/real-lender-packet",
+  ];
   const isPhase6 = phase6Paths.includes(path);
   const isPhase7 = phase7Paths.includes(path);
   const isIndianaMatrix = indianaMatrixPaths.includes(path);
   const isFundingControl = fundingControlPaths.includes(path);
+  const isEvidencePacket = evidencePacketPaths.includes(path);
   return (
     <div style={S.page}>
       <div style={S.breadcrumb}>
@@ -150,7 +167,8 @@ function SectionPage({ path }: { path: string }) {
       {isPhase7 && <Phase7Panel path={path} />}
       {isIndianaMatrix && <IndianaMatrixPanel path={path} />}
       {isFundingControl && <FundingControlPanel path={path} />}
-      {!isPhase6 && !isPhase7 && !isIndianaMatrix && !isFundingControl && (
+      {isEvidencePacket && <EvidencePacketPanel path={path} />}
+      {!isPhase6 && !isPhase7 && !isIndianaMatrix && !isFundingControl && !isEvidencePacket && (
         <div style={S.placeholder}>
           <div style={{ fontSize: 48, marginBottom: 16 }}>{meta?.icon}</div>
           <div style={{ color: "var(--muted)" }}>This module is under active development.</div>
@@ -617,6 +635,138 @@ function IndianaMatrixPanel({ path }: { path: string }) {
 
 function FundingControlPanel({ path }: { path: string }) {
   const panel = FUNDING_CONTROL_PANELS[path];
+  if (!panel) return null;
+  return (
+    <div>
+      <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20, flexWrap: "wrap" }}>
+        <span style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 6, padding: "4px 14px", fontSize: 12, fontWeight: 700, color: panel.statusColor, letterSpacing: 0.5 }}>
+          {panel.status}
+        </span>
+        {panel.badges.map((badge) => (
+          <span key={badge} style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 6, padding: "3px 10px", fontSize: 11, color: "var(--muted)" }}>
+            {badge}
+          </span>
+        ))}
+      </div>
+      <div style={{ background: "var(--surface)", border: `1px solid ${panel.statusColor}`, borderRadius: 8, padding: "12px 16px", marginBottom: 20, fontSize: 13, color: panel.statusColor }}>
+        ⚠️ {panel.reviewWarning}
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 12 }}>
+        {panel.items.map((item) => (
+          <div key={item.label} style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 8, padding: "16px 18px" }}>
+            <div style={{ fontSize: 11, color: "var(--muted)", marginBottom: 6, textTransform: "uppercase", letterSpacing: 0.5 }}>{item.label}</div>
+            <div style={{ fontWeight: 600, fontSize: 13, color: "var(--text)" }}>{item.value}</div>
+            {item.note && <div style={{ fontSize: 11, color: "var(--muted)", marginTop: 4 }}>{item.note}</div>}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+const EVIDENCE_PACKET_PANELS: Record<string, { status: string; statusColor: string; badges: string[]; reviewWarning: string; items: Array<{ label: string; value: string; note?: string }> }> = {
+  "/project-control/evidence-inbox": {
+    status: "INTAKE ONLY",
+    statusColor: "var(--warning, #d97706)",
+    badges: ["PDF", "Spreadsheet", "Email", "Image", "Legal", "Tax", "Secret Blocked"],
+    reviewWarning: "Uploaded does NOT mean accepted. All evidence requires human review. Secret-containing files are blocked on intake.",
+    items: [
+      { label: "Files Received", value: "0 (no real uploads yet)" },
+      { label: "Files Classified", value: "0" },
+      { label: "Files Mapped", value: "0" },
+      { label: "Files Needing Review", value: "0" },
+      { label: "Files Blocked (Secrets)", value: "0" },
+      { label: "Next Best Action", value: "Submit first evidence files: appraisal, title, GC insurance, bank statement" },
+    ],
+  },
+  "/project-control/evidence-mapping": {
+    status: "MAPPING ENGINE READY",
+    statusColor: "var(--accent, #3b82f6)",
+    badges: ["Contractor", "Funding", "RWA", "Lender", "Incentives", "Permits"],
+    reviewWarning: "Mapping is a classification step only. Mapped evidence requires review and acceptance before contributing to lender-ready status.",
+    items: [
+      { label: "Total Mapping Rules", value: "36 requirement rules active" },
+      { label: "Contractor Requirements", value: "gc_insurance, gc_bid, gc_license, gc_scope, gc_w9" },
+      { label: "Funding Requirements", value: "appraisal, title, survey, bank statement, term sheet" },
+      { label: "RWA Requirements", value: "rwa_legal_review, xrpl_proof_reference, human_approval_log" },
+      { label: "Incentive Requirements", value: "grant_award_letter, energy_model, 179D, 48E" },
+      { label: "Next Best Action", value: "Upload first documents to activate auto-mapping" },
+    ],
+  },
+  "/project-control/packet-status": {
+    status: "NOT STARTED",
+    statusColor: "var(--warning, #d97706)",
+    badges: ["Contractor", "Trade", "Funding", "RWA", "PoF", "ESG", "Code/Permit", "Lender"],
+    reviewWarning: "Lender-ready requires: evidence present + accepted by reviewer + professional review complete + no blockers + lender-use authorization on file.",
+    items: [
+      { label: "Contractor Packet", value: "not_started", note: "Missing: GC insurance, bid, license, scope, W-9" },
+      { label: "Trade Packet", value: "not_started", note: "Missing: trade license, scope, bid, W-9" },
+      { label: "Funding Packet", value: "not_started", note: "Missing: appraisal, title, survey, bank statement, term sheet" },
+      { label: "RWA Packet", value: "not_started", note: "Missing: RWA legal review, XRPL proof, approval log" },
+      { label: "PoF Packet", value: "not_started", note: "Missing: PoF letter, bank statement, escrow letter" },
+      { label: "Lender Packet", value: "not_started", note: "12 required items — all missing" },
+    ],
+  },
+  "/project-control/accepted-evidence": {
+    status: "NO ACCEPTED FILES YET",
+    statusColor: "var(--muted, #6b7280)",
+    badges: ["Reviewed", "Human Accepted", "Professional Review", "Confidential"],
+    reviewWarning: "Only evidence accepted by an authorised human reviewer is shown here. Upload-only status does not appear.",
+    items: [
+      { label: "Accepted Files", value: "0" },
+      { label: "Accepted by Category", value: "contractor: 0 / funding: 0 / RWA: 0 / lender: 0" },
+      { label: "Files Improving Packet Completeness", value: "0" },
+      { label: "Financial Documents Accepted", value: "0 (confidential — lender only)" },
+      { label: "Legal Documents Accepted", value: "0 (attorney reviewed required)" },
+      { label: "Next Best Action", value: "Complete first document review cycle" },
+    ],
+  },
+  "/project-control/blocked-evidence": {
+    status: "MONITOR",
+    statusColor: "var(--error, #ef4444)",
+    badges: ["Secrets Detected", "Missing Review", "Active Blockers", "Prohibited"],
+    reviewWarning: "Blocked files must be removed or remediated before they can be re-submitted. Secret-containing files are permanently blocked.",
+    items: [
+      { label: "Blocked Files", value: "0" },
+      { label: "Blocked: Secret Detected", value: "0", note: "Private keys, seed phrases, API tokens, passwords" },
+      { label: "Blocked: Missing Professional Review", value: "0" },
+      { label: "Blocked: Active Compliance Blockers", value: "0" },
+      { label: "Blocked: RWA/XRPL Live Transaction", value: "Live transaction route remains blocked by policy" },
+      { label: "Next Best Action", value: "Review and resolve any blocked submissions" },
+    ],
+  },
+  "/project-control/review-queue": {
+    status: "REVIEW REQUIRED",
+    statusColor: "var(--warning, #d97706)",
+    badges: ["Pending", "Attorney Review", "CPA Review", "Lender Review", "Authorised Sign-off"],
+    reviewWarning: "Items in the review queue are not counted toward lender-ready status until accepted by the designated reviewer.",
+    items: [
+      { label: "Items Awaiting Review", value: "0" },
+      { label: "Attorney Review Pending", value: "0 (legal memos, RWA review, securities opinions)" },
+      { label: "CPA Review Pending", value: "0 (tax memos, 179D/48E, grant award letters)" },
+      { label: "Lender Review Pending", value: "0 (appraisal, title, equity proof, bank statement)" },
+      { label: "Human Approval Log Needed", value: "0" },
+      { label: "Next Best Action", value: "Route first documents to reviewers upon intake" },
+    ],
+  },
+  "/project-control/real-lender-packet": {
+    status: "NOT LENDER READY",
+    statusColor: "var(--error, #ef4444)",
+    badges: ["8 Packet Categories", "Accepted Evidence Required", "Professional Review Required", "Authorization Required"],
+    reviewWarning: "Real lender packet requires 8 fully accepted, reviewed, and authorized evidence packets. Nothing is auto-approved. Estimated incentives, RWA proof references, and obligations do not count as verified funds.",
+    items: [
+      { label: "Overall Status", value: "NOT LENDER READY" },
+      { label: "Packets Lender-Ready", value: "0 of 8" },
+      { label: "Contractor Packet", value: "not_started" },
+      { label: "Funding Packet", value: "not_started" },
+      { label: "Lender Packet", value: "not_started" },
+      { label: "Next Best Action", value: "Start evidence intake: appraisal, GC insurance, title, bank statement, term sheet" },
+    ],
+  },
+};
+
+function EvidencePacketPanel({ path }: { path: string }) {
+  const panel = EVIDENCE_PACKET_PANELS[path];
   if (!panel) return null;
   return (
     <div>
