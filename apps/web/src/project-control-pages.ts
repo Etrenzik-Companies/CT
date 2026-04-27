@@ -45,4 +45,11 @@ export const PROJECT_CONTROL_PAGES = [
   "/project-control/blocked-evidence",
   "/project-control/review-queue",
   "/project-control/real-lender-packet",
+  "/project-control/upload-center",
+  "/project-control/local-evidence-vault",
+  "/project-control/upload-requests",
+  "/project-control/review-workflow",
+  "/project-control/sensitive-documents",
+  "/project-control/quarantined-files",
+  "/project-control/evidence-audit-log",
 ] as const;

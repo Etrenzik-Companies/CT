@@ -26,6 +26,13 @@
   - `@ct/types`: authoritative domain union types — `ProjectStatus`, `RiskLevel`, `TradeCategory`, `FundingType`, `DocumentType`, `AgentRole`, and more.
   - Real ESLint (`typescript-eslint` flat config) in `apps/api`.
 
+- ✅ **Phase 9 — Upload UI + Local Evidence Vault** (`0.8.5`, branch `feat/phase9-upload-ui-local-evidence-vault`)
+  - Added local evidence vault registration engine with metadata-only storage policy, secret-pattern blocking, sensitive-document handling, and retention/access policy assignment.
+  - Added upload-request checklist engine with blocker-first prioritization and secret-request guardrails.
+  - Added role-based evidence review engine with lender authorization checks, role gating, mandatory rejection reasons, and audit entry generation.
+  - Added seven dashboard modules: Upload Center, Local Evidence Vault, Upload Requests, Review Workflow, Sensitive Documents, Quarantined Files, Evidence Audit Log.
+  - Added docs 29-31 for upload flow, reviewer workflow, and security/retention policy.
+
  ✅ **Phase 6 — RWA, XRPL, PoF, ESG, Incentive, and Funding Intelligence** (`0.7.0`, tag `phase6-rwa-xrpl-pof-funding-v1`)
   - RWA Asset Registry engine: 6-doc evidence checklist, ownership validation, lien/appraisal/insurance checks.
   - XRPL Readiness simulation layer: 11 action types all `approval_required`, 6 compliance warnings, asset classification.
@@ -65,7 +72,6 @@
 
 ## Planned
 
-
 - ✅ **Phase 8 — Real Evidence Packet Intake** (`0.8.4`, tag `feat/phase8-real-evidence-packet-intake`)
   - Added Evidence Intake Inbox engine: classifies documents, detects and blocks 10 secret patterns, infers mapping targets from 24 keyword rules. `autoAccepted: false` enforced as literal type.
   - Added Evidence-to-Requirement Mapping engine: 36 requirement IDs, 35 keyword rules, standing blockers on estimated incentives and RWA/XRPL references.
@@ -76,15 +82,15 @@
 
 ## Planned
 
-- ⚪ **Phase 9 — Live Intake and Vector Indexing**
+- ⚪ **Phase 10 — Live Binary Vault + Vector Indexing**
   - Real document upload flows, persistent index storage, and vector retrieval adapters.
   - Funding packet exports tied to accepted evidence and cited retrieval results.
 
-- ⚪ **Phase 10 — ESG / Carbon Zero**
+- ⚪ **Phase 11 — ESG / Carbon Zero**
   - Carbon footprint tracker, LEED/BREEAM checklist, ESG reporting.
 
-- ⚪ **Phase 11 — Security Hardening**
+- ⚪ **Phase 12 — Security Hardening**
   - RBAC enforcement, audit log, secrets management, pen-test checklist.
 
-- ⚪ **Phase 12 — Deployment and Operations**
+- ⚪ **Phase 13 — Deployment and Operations**
   - Docker compose production stack, health checks, observability.

@@ -1,4 +1,41 @@
 ﻿# Changelog
+## 0.8.5 - 2026-04-27
+
+### Phase 9 — Upload UI and Local Evidence Vault
+
+- Added `apps/api/src/evidenceVault/types.ts`, `apps/api/src/evidenceVault/engine.ts`, and `apps/api/src/evidenceVault/engine.test.ts`.
+  - Metadata-only local evidence vault registration (no raw file byte storage in this phase).
+  - Deterministic evidence ID generation, extension/size normalization, allowed-extension + max-size guards.
+  - Prohibited secret pattern blocking for `.env`, `id_rsa`, private key, seed phrase, mnemonic, API token, password, and wallet key patterns.
+  - Sensitive-document flagging for bank statements, legal/tax memos, identity-sensitive docs, lender term sheets, insurance docs, and title docs.
+  - `autoAccepted: false` enforced on all registrations.
+- Added `apps/api/src/uploadRequests/types.ts`, `apps/api/src/uploadRequests/engine.ts`, and `apps/api/src/uploadRequests/engine.test.ts`.
+  - Category-driven upload checklists across contractor/trade/funding/pof/rwa/esg/incentive/tax/legal/code/permit/lender/insurance/title/appraisal/utility/other.
+  - Missing blocker prioritization and next-best-action generation.
+  - Secret-like request labels are guarded against and excluded.
+  - Requests link to `evidenceMapping` and `packetStatus` module targets.
+- Added `apps/api/src/evidenceReview/types.ts`, `apps/api/src/evidenceReview/engine.ts`, and `apps/api/src/evidenceReview/engine.test.ts`.
+  - Role-gated review policy for legal/tax/lender/contractor/code/ESG/incentive/blockchain-reference evidence classes.
+  - Lender document acceptance requires lender-use authorization.
+  - Rejection requires reason; acceptance and rejection produce audit entries.
+  - Secret-detected files cannot be approved.
+- Updated `apps/web/src/project-control-pages.ts` and `apps/web/src/App.tsx`.
+  - Added seven new dashboard modules:
+    - Upload Center
+    - Local Evidence Vault
+    - Upload Requests
+    - Review Workflow
+    - Sensitive Documents
+    - Quarantined Files
+    - Evidence Audit Log
+- Added docs:
+  - `docs/29-upload-ui-and-local-evidence-vault.md`
+  - `docs/30-evidence-review-workflow.md`
+  - `docs/31-evidence-security-and-retention-policy.md`
+- Updated documentation and planning indexes:
+  - `docs/00-table-of-contents.md`
+  - `ROADMAP.md`
+
 ## 0.8.4 - 2026-04-27
 
 ### Phase 8 — Real Evidence Packet Intake

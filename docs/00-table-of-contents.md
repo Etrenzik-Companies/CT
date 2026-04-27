@@ -30,6 +30,9 @@
 | 🟢 | Real Evidence Intake Inbox | 26-real-evidence-intake-inbox.md | Document intake engine — classify, block secrets, map to requirements; uploaded ≠ accepted |
 | 🟢 | Evidence-to-Requirement Mapping | 27-evidence-to-requirement-mapping.md | Rules that map evidence files to 36 specific requirements across all funding/compliance domains |
 | 🟢 | Real Lender Packet Status Engine | 28-real-lender-packet-status-engine.md | 8-category packet completeness engine with lender-ready gates: accepted + reviewed + authorized |
+| 🟢 | Upload UI + Local Evidence Vault | 29-upload-ui-and-local-evidence-vault.md | Metadata-only upload center and local evidence vault with policy-driven registration and review routing |
+| 🟢 | Evidence Review Workflow | 30-evidence-review-workflow.md | Role-gated acceptance/rejection workflow with lender authorization and audit requirements |
+| 🟢 | Evidence Security + Retention Policy | 31-evidence-security-and-retention-policy.md | Secret-prohibited upload policy, restricted handling, and retention/access controls |
 
 ## Project Control Specs
 

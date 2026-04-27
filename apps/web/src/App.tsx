@@ -16,6 +16,13 @@ const PAGE_META: Record<string, { label: string; icon: string; desc: string }> =
   "/project-control/blocked-evidence": { label: "Blocked Evidence", icon: "🚫", desc: "Evidence items blocked due to secrets, missing review, or active compliance blockers." },
   "/project-control/review-queue": { label: "Review Queue", icon: "⏳", desc: "Outstanding evidence items requiring human review before any lender-ready classification." },
   "/project-control/real-lender-packet": { label: "Real Lender Packet", icon: "📋", desc: "Composite real lender packet status: accepted evidence + reviewed + no blockers required." },
+  "/project-control/upload-center": { label: "Upload Center", icon: "📤", desc: "Register incoming evidence metadata, classify risk, and route files to required reviewers." },
+  "/project-control/local-evidence-vault": { label: "Local Evidence Vault", icon: "🧱", desc: "Metadata-only local evidence vault with security scan outcomes, retention, and access tiers." },
+  "/project-control/upload-requests": { label: "Upload Requests", icon: "📝", desc: "Checklist-driven upload requests prioritized by packet blockers and missing lender-critical documents." },
+  "/project-control/review-workflow": { label: "Review Workflow", icon: "🧑‍⚖️", desc: "Role-based review decisions for legal, tax, lender, construction, and code evidence." },
+  "/project-control/sensitive-documents": { label: "Sensitive Documents", icon: "🔒", desc: "Restricted handling queue for financial, legal, tax, identity, lender, insurance, and title files." },
+  "/project-control/quarantined-files": { label: "Quarantined Files", icon: "🚧", desc: "Secret-detected or policy-violating file records that are blocked from acceptance." },
+  "/project-control/evidence-audit-log": { label: "Evidence Audit Log", icon: "📜", desc: "Immutable review/audit event feed for registrations, decisions, and policy enforcement actions." },
   "/project-control/indiana-program-matrix": { label: "Indiana Program Matrix", icon: "🧮", desc: "Official-source matrix across incentives, grants, taxes, code compliance, and public finance." },
   "/project-control/esg-incentives-indiana": { label: "ESG Incentives", icon: "⚡", desc: "Federal and Indiana ESG/energy incentive screening with evidence gates and value-stage separation." },
   "/project-control/grants-public-funding": { label: "Grants & Public Funding", icon: "🏛️", desc: "State, local, environmental, and workforce grant pathways with monitor-only controls." },
@@ -149,11 +156,21 @@ function SectionPage({ path }: { path: string }) {
     "/project-control/review-queue",
     "/project-control/real-lender-packet",
   ];
+  const phase9Paths = [
+    "/project-control/upload-center",
+    "/project-control/local-evidence-vault",
+    "/project-control/upload-requests",
+    "/project-control/review-workflow",
+    "/project-control/sensitive-documents",
+    "/project-control/quarantined-files",
+    "/project-control/evidence-audit-log",
+  ];
   const isPhase6 = phase6Paths.includes(path);
   const isPhase7 = phase7Paths.includes(path);
   const isIndianaMatrix = indianaMatrixPaths.includes(path);
   const isFundingControl = fundingControlPaths.includes(path);
   const isEvidencePacket = evidencePacketPaths.includes(path);
+  const isPhase9 = phase9Paths.includes(path);
   return (
     <div style={S.page}>
       <div style={S.breadcrumb}>
@@ -168,7 +185,8 @@ function SectionPage({ path }: { path: string }) {
       {isIndianaMatrix && <IndianaMatrixPanel path={path} />}
       {isFundingControl && <FundingControlPanel path={path} />}
       {isEvidencePacket && <EvidencePacketPanel path={path} />}
-      {!isPhase6 && !isPhase7 && !isIndianaMatrix && !isFundingControl && !isEvidencePacket && (
+      {isPhase9 && <Phase9Panel path={path} />}
+      {!isPhase6 && !isPhase7 && !isIndianaMatrix && !isFundingControl && !isEvidencePacket && !isPhase9 && (
         <div style={S.placeholder}>
           <div style={{ fontSize: 48, marginBottom: 16 }}>{meta?.icon}</div>
           <div style={{ color: "var(--muted)" }}>This module is under active development.</div>
@@ -767,6 +785,138 @@ const EVIDENCE_PACKET_PANELS: Record<string, { status: string; statusColor: stri
 
 function EvidencePacketPanel({ path }: { path: string }) {
   const panel = EVIDENCE_PACKET_PANELS[path];
+  if (!panel) return null;
+  return (
+    <div>
+      <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20, flexWrap: "wrap" }}>
+        <span style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 6, padding: "4px 14px", fontSize: 12, fontWeight: 700, color: panel.statusColor, letterSpacing: 0.5 }}>
+          {panel.status}
+        </span>
+        {panel.badges.map((badge) => (
+          <span key={badge} style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 6, padding: "3px 10px", fontSize: 11, color: "var(--muted)" }}>
+            {badge}
+          </span>
+        ))}
+      </div>
+      <div style={{ background: "var(--surface)", border: `1px solid ${panel.statusColor}`, borderRadius: 8, padding: "12px 16px", marginBottom: 20, fontSize: 13, color: panel.statusColor }}>
+        ⚠️ {panel.reviewWarning}
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 12 }}>
+        {panel.items.map((item) => (
+          <div key={item.label} style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 8, padding: "16px 18px" }}>
+            <div style={{ fontSize: 11, color: "var(--muted)", marginBottom: 6, textTransform: "uppercase", letterSpacing: 0.5 }}>{item.label}</div>
+            <div style={{ fontWeight: 600, fontSize: 13, color: "var(--text)" }}>{item.value}</div>
+            {item.note && <div style={{ fontSize: 11, color: "var(--muted)", marginTop: 4 }}>{item.note}</div>}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+const PHASE9_PANELS: Record<string, { status: string; statusColor: string; badges: string[]; reviewWarning: string; items: Array<{ label: string; value: string; note?: string }> }> = {
+  "/project-control/upload-center": {
+    status: "READY FOR INTAKE",
+    statusColor: "var(--accent, #3b82f6)",
+    badges: ["Metadata-Only", "No Auto-Accept", "Security Scan", "Reviewer Routing"],
+    reviewWarning: "Upload/register does not mean accepted. Files begin in received/review-required states and must pass explicit human review.",
+    items: [
+      { label: "Files Registered", value: "0" },
+      { label: "Files Quarantined", value: "0" },
+      { label: "Files Needing Review", value: "0" },
+      { label: "Missing Priority Uploads", value: "appraisal, title_search, gc_insurance, bank_statement, lender_term_sheet" },
+      { label: "Reviewer Roles Required", value: "legal, tax/accounting, lender, construction, code, ESG/public-finance" },
+      { label: "Next Best Action", value: "Register first lender-critical files and route reviewers" },
+    ],
+  },
+  "/project-control/local-evidence-vault": {
+    status: "METADATA VAULT",
+    statusColor: "var(--success, #16a34a)",
+    badges: ["Local Reference", "Restricted Access", "Retention Rules", "Audit"],
+    reviewWarning: "Local evidence vault is metadata-only unless encrypted storage is explicitly implemented in a future phase.",
+    items: [
+      { label: "Files Registered", value: "0" },
+      { label: "Sensitive Documents", value: "0" },
+      { label: "Accepted Evidence", value: "0", note: "Accepted only after explicit review decision" },
+      { label: "Rejected Evidence", value: "0" },
+      { label: "Audit Trail Count", value: "0" },
+      { label: "Next Best Action", value: "Apply retention and access policy at registration" },
+    ],
+  },
+  "/project-control/upload-requests": {
+    status: "BLOCKER-FIRST",
+    statusColor: "var(--warning, #d97706)",
+    badges: ["Checklist", "Required vs Optional", "Packet Links", "No Secret Requests"],
+    reviewWarning: "Upload requests prioritize missing blockers and must never request private keys, seed phrases, API tokens, or passwords.",
+    items: [
+      { label: "Missing Priority Uploads", value: "5 critical" },
+      { label: "Files Needing Review", value: "0" },
+      { label: "Accepted Evidence", value: "0" },
+      { label: "Rejected Evidence", value: "0" },
+      { label: "Reviewer Roles Required", value: "lender, legal, tax/accounting, construction, code" },
+      { label: "Next Best Action", value: "Issue funding and lender upload requests first" },
+    ],
+  },
+  "/project-control/review-workflow": {
+    status: "ROLE-GATED",
+    statusColor: "var(--warning, #d97706)",
+    badges: ["Legal Review", "Tax Review", "Lender Auth", "Off-Chain Review"],
+    reviewWarning: "Legal, tax, lender, code, and blockchain-reference files require appropriate reviewer roles and explicit authorization where required.",
+    items: [
+      { label: "Files Needing Review", value: "0" },
+      { label: "Accepted Evidence", value: "0" },
+      { label: "Rejected Evidence", value: "0" },
+      { label: "Sensitive Documents", value: "0" },
+      { label: "Audit Trail Count", value: "0" },
+      { label: "Next Best Action", value: "Assign reviewer queue by document class" },
+    ],
+  },
+  "/project-control/sensitive-documents": {
+    status: "RESTRICTED",
+    statusColor: "var(--error, #ef4444)",
+    badges: ["Financial", "Legal", "Tax", "Identity", "Lender"],
+    reviewWarning: "Confidential and identity-sensitive files require restricted handling and designated reviewers before any acceptance action.",
+    items: [
+      { label: "Sensitive Docs", value: "0" },
+      { label: "Files Quarantined", value: "0" },
+      { label: "Files Needing Review", value: "0" },
+      { label: "Accepted Evidence", value: "0" },
+      { label: "Reviewer Roles Required", value: "legal, tax/accounting, lender, project_admin" },
+      { label: "Next Best Action", value: "Route all sensitive docs to restricted review track" },
+    ],
+  },
+  "/project-control/quarantined-files": {
+    status: "BLOCKED",
+    statusColor: "var(--error, #ef4444)",
+    badges: ["Secret Detected", "Unsupported", "Oversized", "Policy Blocked"],
+    reviewWarning: "Quarantined records cannot be accepted. Secret-like files must be removed and replaced with compliant documents.",
+    items: [
+      { label: "Files Quarantined", value: "0" },
+      { label: "Rejected Evidence", value: "0" },
+      { label: "Sensitive Documents", value: "0" },
+      { label: "Files Needing Review", value: "0" },
+      { label: "Audit Trail Count", value: "0" },
+      { label: "Next Best Action", value: "Remediate blocked uploads and resubmit compliant files" },
+    ],
+  },
+  "/project-control/evidence-audit-log": {
+    status: "AUDIT READY",
+    statusColor: "var(--accent, #3b82f6)",
+    badges: ["Registration", "Review Decision", "Policy Enforcement", "Immutable Trail"],
+    reviewWarning: "Accepted evidence must include an audit entry. Rejected decisions require reason capture for audit completeness.",
+    items: [
+      { label: "Audit Trail Count", value: "0" },
+      { label: "Files Registered", value: "0" },
+      { label: "Accepted Evidence", value: "0" },
+      { label: "Rejected Evidence", value: "0" },
+      { label: "Files Quarantined", value: "0" },
+      { label: "Next Best Action", value: "Record registration and reviewer decisions for each evidence item" },
+    ],
+  },
+};
+
+function Phase9Panel({ path }: { path: string }) {
+  const panel = PHASE9_PANELS[path];
   if (!panel) return null;
   return (
     <div>
