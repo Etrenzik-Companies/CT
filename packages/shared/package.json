@@ -2,10 +2,15 @@
   "name": "@ct/shared",
   "version": "0.1.0",
   "private": true,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "typecheck": "echo typecheck placeholder",
-    "test": "echo test placeholder",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "echo no tests yet",
     "lint": "echo lint placeholder",
-    "build": "echo build placeholder"
+    "build": "tsc -p tsconfig.json"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0"
   }
 }
