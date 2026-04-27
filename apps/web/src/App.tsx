@@ -2,6 +2,12 @@ import { Routes, Route, NavLink, useNavigate } from "react-router-dom";
 import { PROJECT_CONTROL_PAGES } from "./project-control-pages";
 
 const PAGE_META: Record<string, { label: string; icon: string; desc: string }> = {
+  "/project-control/rwa":                    { label: "RWA Registry",           icon: "🏛️",  desc: "Real-world asset documentation readiness and lender evidence checklist." },
+  "/project-control/xrpl-readiness":         { label: "XRPL Readiness",         icon: "⛓️",  desc: "XRPL settlement simulation and compliance warning review. Simulation only." },
+  "/project-control/pof":                    { label: "Proof of Funds",          icon: "🏦",  desc: "Capital stack verification, gap analysis, and lender-ready PoF packet status." },
+  "/project-control/incentive-intelligence": { label: "Incentive Intelligence",  icon: "💡",  desc: "Tax credit, grant, and green-finance incentive matching engine. For review only." },
+  "/project-control/esg-scorecard":          { label: "ESG Scorecard",           icon: "🌿",  desc: "Environmental, social, and governance metric tracking and certification readiness." },
+  "/project-control/funding-match":          { label: "Funding Match",           icon: "💼",  desc: "Lender and program intelligence. Potential matches only — not commitments." },
   "/project-control":                 { label: "Project Control",     icon: "🏗️",  desc: "Central command for all project control operations." },
   "/project-control/contractors":     { label: "Contractors",         icon: "👷",  desc: "Manage and vet general contractors and subcontractors." },
   "/project-control/trades":          { label: "Trades",              icon: "🔧",  desc: "44-category trade management and status tracking." },
@@ -75,6 +81,15 @@ function DashboardPage() {
 
 function SectionPage({ path }: { path: string }) {
   const meta = PAGE_META[path];
+  const phase6Paths = [
+    "/project-control/rwa",
+    "/project-control/xrpl-readiness",
+    "/project-control/pof",
+    "/project-control/incentive-intelligence",
+    "/project-control/esg-scorecard",
+    "/project-control/funding-match",
+  ];
+  const isPhase6 = phase6Paths.includes(path);
   return (
     <div style={S.page}>
       <div style={S.breadcrumb}>
@@ -84,14 +99,125 @@ function SectionPage({ path }: { path: string }) {
       </div>
       <h1 style={S.h1}>{meta?.icon} {meta?.label}</h1>
       <p style={S.subtitle}>{meta?.desc}</p>
-      <div style={S.placeholder}>
-        <div style={{ fontSize: 48, marginBottom: 16 }}>{meta?.icon}</div>
-        <div style={{ color: "var(--muted)" }}>
-          This module is under active development.
+      {isPhase6 && <Phase6Panel path={path} />}
+      {!isPhase6 && (
+        <div style={S.placeholder}>
+          <div style={{ fontSize: 48, marginBottom: 16 }}>{meta?.icon}</div>
+          <div style={{ color: "var(--muted)" }}>This module is under active development.</div>
+          <div style={{ color: "var(--accent)", marginTop: 8, fontSize: 14 }}>Phase 5 → live data connections</div>
         </div>
-        <div style={{ color: "var(--accent)", marginTop: 8, fontSize: 14 }}>
-          Phase 5 → live data connections
-        </div>
+      )}
+    </div>
+  );
+}
+
+const PHASE6_PANELS: Record<string, { status: string; statusColor: string; badges: string[]; reviewWarning: string; items: Array<{ label: string; value: string; note?: string }> }> = {
+  "/project-control/rwa": {
+    status: "NEEDS REVIEW",
+    statusColor: "var(--warning, #d97706)",
+    badges: ["Title Report", "Deed", "Appraisal", "Insurance", "Survey", "Phase I ESA"],
+    reviewWarning: "RWA readiness requires legal and title counsel review before lender submission.",
+    items: [
+      { label: "Required Evidence Types", value: "6 of 6 defined" },
+      { label: "Ownership Verification", value: "100% accounted for", note: "Must equal 100% — no gaps" },
+      { label: "Lien Resolution", value: "Pending evidence", note: "Each lien must have an evidenceId" },
+      { label: "Appraisal Age", value: "< 12 months required" },
+      { label: "Insurance Expiry", value: "Active coverage required" },
+    ],
+  },
+  "/project-control/xrpl-readiness": {
+    status: "SIMULATION ONLY",
+    statusColor: "var(--accent, #3b82f6)",
+    badges: ["Approval Required", "No Live Execution", "Compliance Checked"],
+    reviewWarning: "All XRPL actions are simulated and require approval. No live token creation or settlement is executed.",
+    items: [
+      { label: "Asset Classification", value: "documentation_only → tokenization_candidate" },
+      { label: "Action Types", value: "11 — all approval_required" },
+      { label: "Compliance Warnings", value: "6 standard codes always included" },
+      { label: "Currency / Issuer", value: "Required for settlement_reference classification" },
+      { label: "Live Execution", value: "DISABLED — approval_required on all paths" },
+    ],
+  },
+  "/project-control/pof": {
+    status: "LENDER REVIEW REQUIRED",
+    statusColor: "var(--warning, #d97706)",
+    badges: ["Bank Evidence", "Capital Stack", "Gap Analysis", "Lender Authorization"],
+    reviewWarning: "Estimated sources (grants, tax credits, rebates, C-PACE) are never counted as verified funds.",
+    items: [
+      { label: "Verified Funds", value: "Bank statements + blockchain evidence" },
+      { label: "Estimated Sources", value: "EXCLUDED — never count toward verified gap close" },
+      { label: "Capital Gap", value: "Must be $0 for lender_ready status" },
+      { label: "Lender Authorization", value: "Required for lender_ready" },
+      { label: "Status Levels", value: "lender_ready | internally_ready | evidence_missing | gap_unresolved | blocked" },
+    ],
+  },
+  "/project-control/incentive-intelligence": {
+    status: "FOR REVIEW ONLY",
+    statusColor: "var(--muted, #6b7280)",
+    badges: ["179D", "45L", "C-PACE", "Utility Rebates", "GA Property Tax", "DOE Better Buildings"],
+    reviewWarning: "All incentive estimates are for planning purposes only. Consult a qualified tax professional.",
+    items: [
+      { label: "Built-in Programs", value: "6 (expandable)" },
+      { label: "Jurisdictions", value: "Federal + Georgia" },
+      { label: "Estimated Benefit", value: "ESTIMATE ONLY — not a guarantee" },
+      { label: "Stacking", value: "Programs may stack — verify with tax counsel" },
+      { label: "Match Statuses", value: "likely_match | possible_match | needs_review | not_eligible" },
+    ],
+  },
+  "/project-control/esg-scorecard": {
+    status: "EVIDENCE REQUIRED",
+    statusColor: "var(--success, #16a34a)",
+    badges: ["Energy", "Emissions", "Water", "Resilience", "IAQ", "Community", "Workforce", "Compliance", "Documentation"],
+    reviewWarning: "Carbon and water reduction figures are estimates only. Third-party certification verification required.",
+    items: [
+      { label: "Weighted Categories", value: "9 — energy:25%, emissions:20%, water:10%, resilience:10%, IAQ:10%, community:10%, workforce:5%, compliance:5%, docs:5%" },
+      { label: "Certification Threshold", value: "≥ 80 score, no missing evidence" },
+      { label: "Evidence Complete Threshold", value: "≥ 50 score, no missing evidence" },
+      { label: "Estimated Metrics", value: "Score reduced to 40% weight — must have verified evidence" },
+      { label: "Status", value: "certification_ready | evidence_complete | evidence_partial | evidence_missing | not_assessed" },
+    ],
+  },
+  "/project-control/funding-match": {
+    status: "POTENTIAL ONLY",
+    statusColor: "var(--warning, #d97706)",
+    badges: ["Senior Debt", "C-PACE", "Green Bank", "HUD 221d4", "NMTC", "Bridge"],
+    reviewWarning: "All program matches are potential only — not commitments, pre-approvals, or term sheets. Engage qualified real estate finance counsel.",
+    items: [
+      { label: "Built-in Programs", value: "6 (construction loans, bridge, C-PACE, green bank, HUD, NMTC)" },
+      { label: "Committed vs Potential", value: "Strictly separated — committed = executed docs only" },
+      { label: "Estimated Incentives", value: "NEVER counted as committed capital" },
+      { label: "Capital Gap", value: "Computed from committed capital stack vs project cost" },
+      { label: "Readiness Score", value: "RWA 30% + PoF 35% + ESG 20% + Incentive Alignment 15%" },
+    ],
+  },
+};
+
+function Phase6Panel({ path }: { path: string }) {
+  const panel = PHASE6_PANELS[path];
+  if (!panel) return null;
+  return (
+    <div>
+      <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
+        <span style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 6, padding: "4px 14px", fontSize: 12, fontWeight: 700, color: panel.statusColor, letterSpacing: 0.5 }}>
+          {panel.status}
+        </span>
+        {panel.badges.map((b) => (
+          <span key={b} style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 6, padding: "3px 10px", fontSize: 11, color: "var(--muted)" }}>
+            {b}
+          </span>
+        ))}
+      </div>
+      <div style={{ background: "var(--surface)", border: `1px solid ${panel.statusColor}`, borderRadius: 8, padding: "12px 16px", marginBottom: 20, fontSize: 13, color: panel.statusColor }}>
+        ⚠️ {panel.reviewWarning}
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 12 }}>
+        {panel.items.map((item) => (
+          <div key={item.label} style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 8, padding: "16px 18px" }}>
+            <div style={{ fontSize: 11, color: "var(--muted)", marginBottom: 6, textTransform: "uppercase", letterSpacing: 0.5 }}>{item.label}</div>
+            <div style={{ fontWeight: 600, fontSize: 13, color: "var(--text)" }}>{item.value}</div>
+            {item.note && <div style={{ fontSize: 11, color: "var(--muted)", marginTop: 4 }}>{item.note}</div>}
+          </div>
+        ))}
       </div>
     </div>
   );

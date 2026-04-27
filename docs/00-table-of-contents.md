@@ -12,6 +12,11 @@
 | 🟣 | AI | 08-rag-mcp-agentic-ai.md | RAG, MCP, agents, tools |
 | ⚫ | Security | 09-security-model.md | Security and governance |
 | 🔵 | Deployment | 10-deployment.md | Setup and deployment |
+| 🟢 | Agentic Orchestrator | 11-agentic-orchestrator-foundation.md | Typed agentic orchestrator foundation and safety model |
+| 🟢 | MCP Runtime | 12-mcp-tool-registry-runtime.md | Safe MCP runtime execution and approval model |
+| 🟢 | RWA / XRPL / PoF / Funding | 13-rwa-xrpl-pof-funding-intelligence.md | RWA readiness, XRPL simulation, PoF engine, funding match |
+| 🟢 | Incentive + ESG Map | 14-tax-incentive-esg-funding-source-map.md | Tax incentive programs, ESG metric weights, stacking rules |
+| 🟢 | Lender Submission Guide | 15-lender-submission-and-pof-readiness.md | PoF readiness checklist, lender submission workflow |
 
 ## Project Control Specs
 

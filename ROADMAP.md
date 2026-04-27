@@ -26,12 +26,21 @@
   - `@ct/types`: authoritative domain union types — `ProjectStatus`, `RiskLevel`, `TradeCategory`, `FundingType`, `DocumentType`, `AgentRole`, and more.
   - Real ESLint (`typescript-eslint` flat config) in `apps/api`.
 
-- ✅ **Phase 5 — Web App and Cloudflare Pages Deployment** (`0.6.0`)
+ ✅ **Phase 6 — RWA, XRPL, PoF, ESG, Incentive, and Funding Intelligence** (`0.7.0`, tag `phase6-rwa-xrpl-pof-funding-v1`)
+  - RWA Asset Registry engine: 6-doc evidence checklist, ownership validation, lien/appraisal/insurance checks.
+  - XRPL Readiness simulation layer: 11 action types all `approval_required`, 6 compliance warnings, asset classification.
+  - Proof of Funds engine: capital stack verification, gap analysis, estimated source exclusion, lender authorization.
+  - Tax Incentive Intelligence: 6 built-in programs (179D, 45L, DOE, GA property tax, GA energy loan, utility rebates).
+  - ESG Scorecard engine: 9 weighted categories, estimate flag scoring, certification readiness thresholds.
+  - Funding Intelligence: 6 built-in programs, strict potential/committed separation, readiness score composite.
+  - 6 new web dashboard panels with status badges, review warnings, and data cards.
+  - 3 new documentation files (docs 13–15). 53 total tests passing.
   - Vite + React 18 + TypeScript SPA replacing placeholder `apps/web`.
-  - 14-module dashboard: contractors, trades, estimating, bid-packages, code-compliance, permitting, incentives, RAG knowledge, MCP tools, agents, templates, risks, decisions.
-  - Cloudflare Pages project `ct-control-tower`, custom domain `ct.unykorn.org`.
-  - GitHub Actions deploy workflow (`deploy.yml`) using `cloudflare/wrangler-action@v3`.
-
+ ## In Progress
+ 🟡 **Phase 7 — Contractor CRM and Estimating Engine**
+  - CRUD operations for contractor profiles, trade categories, license / insurance verification.
+  - Bid package generation, line-item cost database, change-order workflow.
+  - Integration with `@ct/types` trade categories and `@ct/shared` `Result` pattern.
 ## In Progress
 
 - 🟡 **Phase 6 — Contractor CRM**
