@@ -52,4 +52,9 @@ export const PROJECT_CONTROL_PAGES = [
   "/project-control/sensitive-documents",
   "/project-control/quarantined-files",
   "/project-control/evidence-audit-log",
+  "/project-control/first-evidence-batch",
+  "/project-control/lender-critical-files",
+  "/project-control/reviewer-assignments",
+  "/project-control/batch-readiness",
+  "/project-control/first-batch-blockers",
 ] as const;

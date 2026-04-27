@@ -1,4 +1,30 @@
 ﻿# Changelog
+## 0.8.6 - 2026-04-27
+
+### Phase 10 — First Real Evidence Batch
+
+- Added `apps/api/src/firstEvidenceBatch/types.ts`, `apps/api/src/firstEvidenceBatch/demoData.ts`, `apps/api/src/firstEvidenceBatch/engine.ts`, and `apps/api/src/firstEvidenceBatch/engine.test.ts`.
+  - Introduced deterministic first-batch workflow across five lender-critical items: `appraisal`, `title_search`, `gc_insurance`, `bank_statement`, `lender_term_sheet`.
+  - Enforced reviewer-required progression and normalization to `review_required` until explicit decision outcomes are recorded.
+  - Enforced `autoAccepted: false` and lender-ready gating (`all accepted + lender-use authorization`).
+  - Added confidential handling flags for financial/lender-sensitive records.
+- Added `apps/api/src/firstEvidenceBatch/integrations.ts` and `apps/api/src/firstEvidenceBatch/integrations.test.ts`.
+  - Connected first-batch records to existing module targets: `evidenceVault`, `evidenceMapping`, `packetStatus`, `lenderPacket`, `fundingRoutes`, and `contractorMatrix` where applicable.
+  - Added deterministic integration mapping checks.
+- Updated `apps/web/src/project-control-pages.ts` and `apps/web/src/App.tsx`.
+  - Added five new dashboard modules:
+    - First Evidence Batch
+    - Lender Critical Files
+    - Reviewer Assignments
+    - Batch Readiness
+    - First Batch Blockers
+- Added docs:
+  - `docs/32-first-real-evidence-batch.md`
+  - `docs/33-lender-critical-file-review-map.md`
+- Updated documentation and planning indexes:
+  - `docs/00-table-of-contents.md`
+  - `ROADMAP.md`
+
 ## 0.8.5 - 2026-04-27
 
 ### Phase 9 — Upload UI and Local Evidence Vault

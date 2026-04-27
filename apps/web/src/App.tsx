@@ -23,6 +23,11 @@ const PAGE_META: Record<string, { label: string; icon: string; desc: string }> =
   "/project-control/sensitive-documents": { label: "Sensitive Documents", icon: "🔒", desc: "Restricted handling queue for financial, legal, tax, identity, lender, insurance, and title files." },
   "/project-control/quarantined-files": { label: "Quarantined Files", icon: "🚧", desc: "Secret-detected or policy-violating file records that are blocked from acceptance." },
   "/project-control/evidence-audit-log": { label: "Evidence Audit Log", icon: "📜", desc: "Immutable review/audit event feed for registrations, decisions, and policy enforcement actions." },
+  "/project-control/first-evidence-batch": { label: "First Evidence Batch", icon: "🧾", desc: "Initial lender-critical evidence checklist for appraisal, title, GC insurance, bank statement, and term sheet." },
+  "/project-control/lender-critical-files": { label: "Lender Critical Files", icon: "📌", desc: "Priority lender file tracker for the first five evidence records and required review policies." },
+  "/project-control/reviewer-assignments": { label: "Reviewer Assignments", icon: "👥", desc: "Role mapping for lender, legal, title, insurance, accounting, and construction reviews." },
+  "/project-control/batch-readiness": { label: "Batch Readiness", icon: "📈", desc: "Readiness score and lender-ready gate status for the first evidence batch." },
+  "/project-control/first-batch-blockers": { label: "First Batch Blockers", icon: "⛔", desc: "Blocking conditions preventing first-batch progression to lender-ready state." },
   "/project-control/indiana-program-matrix": { label: "Indiana Program Matrix", icon: "🧮", desc: "Official-source matrix across incentives, grants, taxes, code compliance, and public finance." },
   "/project-control/esg-incentives-indiana": { label: "ESG Incentives", icon: "⚡", desc: "Federal and Indiana ESG/energy incentive screening with evidence gates and value-stage separation." },
   "/project-control/grants-public-funding": { label: "Grants & Public Funding", icon: "🏛️", desc: "State, local, environmental, and workforce grant pathways with monitor-only controls." },
@@ -165,12 +170,20 @@ function SectionPage({ path }: { path: string }) {
     "/project-control/quarantined-files",
     "/project-control/evidence-audit-log",
   ];
+  const phase10Paths = [
+    "/project-control/first-evidence-batch",
+    "/project-control/lender-critical-files",
+    "/project-control/reviewer-assignments",
+    "/project-control/batch-readiness",
+    "/project-control/first-batch-blockers",
+  ];
   const isPhase6 = phase6Paths.includes(path);
   const isPhase7 = phase7Paths.includes(path);
   const isIndianaMatrix = indianaMatrixPaths.includes(path);
   const isFundingControl = fundingControlPaths.includes(path);
   const isEvidencePacket = evidencePacketPaths.includes(path);
   const isPhase9 = phase9Paths.includes(path);
+  const isPhase10 = phase10Paths.includes(path);
   return (
     <div style={S.page}>
       <div style={S.breadcrumb}>
@@ -186,7 +199,8 @@ function SectionPage({ path }: { path: string }) {
       {isFundingControl && <FundingControlPanel path={path} />}
       {isEvidencePacket && <EvidencePacketPanel path={path} />}
       {isPhase9 && <Phase9Panel path={path} />}
-      {!isPhase6 && !isPhase7 && !isIndianaMatrix && !isFundingControl && !isEvidencePacket && !isPhase9 && (
+      {isPhase10 && <Phase10Panel path={path} />}
+      {!isPhase6 && !isPhase7 && !isIndianaMatrix && !isFundingControl && !isEvidencePacket && !isPhase9 && !isPhase10 && (
         <div style={S.placeholder}>
           <div style={{ fontSize: 48, marginBottom: 16 }}>{meta?.icon}</div>
           <div style={{ color: "var(--muted)" }}>This module is under active development.</div>
@@ -917,6 +931,113 @@ const PHASE9_PANELS: Record<string, { status: string; statusColor: string; badge
 
 function Phase9Panel({ path }: { path: string }) {
   const panel = PHASE9_PANELS[path];
+  if (!panel) return null;
+  return (
+    <div>
+      <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20, flexWrap: "wrap" }}>
+        <span style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 6, padding: "4px 14px", fontSize: 12, fontWeight: 700, color: panel.statusColor, letterSpacing: 0.5 }}>
+          {panel.status}
+        </span>
+        {panel.badges.map((badge) => (
+          <span key={badge} style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 6, padding: "3px 10px", fontSize: 11, color: "var(--muted)" }}>
+            {badge}
+          </span>
+        ))}
+      </div>
+      <div style={{ background: "var(--surface)", border: `1px solid ${panel.statusColor}`, borderRadius: 8, padding: "12px 16px", marginBottom: 20, fontSize: 13, color: panel.statusColor }}>
+        ⚠️ {panel.reviewWarning}
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 12 }}>
+        {panel.items.map((item) => (
+          <div key={item.label} style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 8, padding: "16px 18px" }}>
+            <div style={{ fontSize: 11, color: "var(--muted)", marginBottom: 6, textTransform: "uppercase", letterSpacing: 0.5 }}>{item.label}</div>
+            <div style={{ fontWeight: 600, fontSize: 13, color: "var(--text)" }}>{item.value}</div>
+            {item.note && <div style={{ fontSize: 11, color: "var(--muted)", marginTop: 4 }}>{item.note}</div>}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+const PHASE10_PANELS: Record<string, { status: string; statusColor: string; badges: string[]; reviewWarning: string; items: Array<{ label: string; value: string; note?: string }> }> = {
+  "/project-control/first-evidence-batch": {
+    status: "CHECKLIST READY",
+    statusColor: "var(--accent, #3b82f6)",
+    badges: ["5 Required Items", "No Auto-Accept", "Reviewer-Gated", "Confidential Handling"],
+    reviewWarning: "First batch is metadata/checklist only unless real files are uploaded locally. Upload/register never means accepted.",
+    items: [
+      { label: "Total First-Batch Items", value: "5" },
+      { label: "Missing", value: "1" },
+      { label: "Received", value: "4", note: "requested/received/registered/mapped normalize to review_required" },
+      { label: "Review-Required", value: "4" },
+      { label: "Accepted", value: "0" },
+      { label: "Blocked", value: "0" },
+      { label: "Lender-Ready", value: "false" },
+      { label: "Next Best Action", value: "Collect missing title search placeholder and route all items for review" },
+    ],
+  },
+  "/project-control/lender-critical-files": {
+    status: "PRIORITY TRACK",
+    statusColor: "var(--warning, #d97706)",
+    badges: ["Appraisal", "Title Search", "GC Insurance", "Bank Statement", "Lender Term Sheet"],
+    reviewWarning: "No real confidential documents are committed in this phase. Use safe placeholders until local upload flow is used.",
+    items: [
+      { label: "Appraisal", value: "review_required", note: "lender/valuation review required" },
+      { label: "Title Search", value: "missing", note: "legal/title review required" },
+      { label: "GC Insurance", value: "review_required", note: "construction/insurance review required" },
+      { label: "Bank Statement", value: "review_required", note: "financial/confidential handling required" },
+      { label: "Lender Term Sheet", value: "review_required", note: "lender-use authorization required" },
+      { label: "Next Best Action", value: "Move each item through review_required to accepted with audit evidence" },
+    ],
+  },
+  "/project-control/reviewer-assignments": {
+    status: "ROLE MAP",
+    statusColor: "var(--accent, #3b82f6)",
+    badges: ["Lender", "Legal", "Title", "Insurance", "Accounting", "Construction"],
+    reviewWarning: "Professional review roles are mandatory for lender-critical files. Unauthorized roles cannot mark evidence accepted.",
+    items: [
+      { label: "Appraisal Reviewers", value: "lender_reviewer, project_admin" },
+      { label: "Title Search Reviewers", value: "legal_reviewer, title_reviewer" },
+      { label: "GC Insurance Reviewers", value: "construction_reviewer, insurance_reviewer" },
+      { label: "Bank Statement Reviewers", value: "accounting_reviewer, lender_reviewer" },
+      { label: "Term Sheet Reviewers", value: "lender_reviewer, legal_reviewer" },
+      { label: "Next Best Action", value: "Assign role queues and capture reviewer decisions with audit entries" },
+    ],
+  },
+  "/project-control/batch-readiness": {
+    status: "NOT LENDER READY",
+    statusColor: "var(--error, #ef4444)",
+    badges: ["All 5 Accepted Required", "Lender Authorization Required", "Deterministic"],
+    reviewWarning: "Lender-ready remains false unless all five first-batch items are accepted and lender-use authorization is on file.",
+    items: [
+      { label: "Total Items", value: "5" },
+      { label: "Accepted Items", value: "0" },
+      { label: "Review-Required Items", value: "4" },
+      { label: "Missing Items", value: "1" },
+      { label: "Lender Authorization", value: "not_on_file" },
+      { label: "Lender-Ready Status", value: "false" },
+      { label: "Next Best Action", value: "Complete all five reviews and secure lender-use authorization" },
+    ],
+  },
+  "/project-control/first-batch-blockers": {
+    status: "BLOCKERS ACTIVE",
+    statusColor: "var(--error, #ef4444)",
+    badges: ["Missing Item", "Unreviewed", "Authorization Gap", "Confidential Controls"],
+    reviewWarning: "Any missing item, unreviewed item, or missing lender-use authorization blocks first-batch lender-ready status.",
+    items: [
+      { label: "Primary Blocker", value: "title_search missing" },
+      { label: "Secondary Blocker", value: "4 items pending review" },
+      { label: "Authorization Blocker", value: "lender-use authorization not on file" },
+      { label: "Confidential Controls", value: "bank_statement + lender_term_sheet restricted" },
+      { label: "Estimated Incentive Guardrail", value: "never counts as verified funds" },
+      { label: "Next Best Action", value: "resolve missing + review blockers in priority order" },
+    ],
+  },
+};
+
+function Phase10Panel({ path }: { path: string }) {
+  const panel = PHASE10_PANELS[path];
   if (!panel) return null;
   return (
     <div>

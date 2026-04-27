@@ -33,6 +33,14 @@
   - Added seven dashboard modules: Upload Center, Local Evidence Vault, Upload Requests, Review Workflow, Sensitive Documents, Quarantined Files, Evidence Audit Log.
   - Added docs 29-31 for upload flow, reviewer workflow, and security/retention policy.
 
+- ✅ **Phase 10 — First Real Evidence Batch** (`0.8.6`, branch `feat/phase10-first-real-evidence-batch`)
+  - Added deterministic first-batch engine for five lender-critical evidence items: appraisal, title search, GC insurance, bank statement, lender term sheet.
+  - Enforced reviewer-required progression and `autoAccepted: false` guardrail for all batch items.
+  - Added lender-ready gating requiring all five accepted plus lender-use authorization.
+  - Added integration mapping to evidence vault, mapping, packet status, lender packet, funding routes, and contractor matrix dependencies.
+  - Added five dashboard modules: First Evidence Batch, Lender Critical Files, Reviewer Assignments, Batch Readiness, First Batch Blockers.
+  - Added docs 32-33 for first-batch workflow and reviewer map.
+
  ✅ **Phase 6 — RWA, XRPL, PoF, ESG, Incentive, and Funding Intelligence** (`0.7.0`, tag `phase6-rwa-xrpl-pof-funding-v1`)
   - RWA Asset Registry engine: 6-doc evidence checklist, ownership validation, lien/appraisal/insurance checks.
   - XRPL Readiness simulation layer: 11 action types all `approval_required`, 6 compliance warnings, asset classification.

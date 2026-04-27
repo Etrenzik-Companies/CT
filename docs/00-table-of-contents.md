@@ -33,6 +33,8 @@
 | 🟢 | Upload UI + Local Evidence Vault | 29-upload-ui-and-local-evidence-vault.md | Metadata-only upload center and local evidence vault with policy-driven registration and review routing |
 | 🟢 | Evidence Review Workflow | 30-evidence-review-workflow.md | Role-gated acceptance/rejection workflow with lender authorization and audit requirements |
 | 🟢 | Evidence Security + Retention Policy | 31-evidence-security-and-retention-policy.md | Secret-prohibited upload policy, restricted handling, and retention/access controls |
+| 🟢 | First Real Evidence Batch | 32-first-real-evidence-batch.md | First lender-critical evidence batch with deterministic checklist/readiness gates and no auto-accept |
+| 🟢 | Lender-Critical Review Map | 33-lender-critical-file-review-map.md | Reviewer assignment matrix and integration targets for appraisal/title/insurance/bank/term-sheet files |
 
 ## Project Control Specs
 
