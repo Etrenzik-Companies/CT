@@ -17,6 +17,7 @@
 | 🟢 | RWA / XRPL / PoF / Funding | 13-rwa-xrpl-pof-funding-intelligence.md | RWA readiness, XRPL simulation, PoF engine, funding match |
 | 🟢 | Incentive + ESG Map | 14-tax-incentive-esg-funding-source-map.md | Tax incentive programs, ESG metric weights, stacking rules |
 | 🟢 | Lender Submission Guide | 15-lender-submission-and-pof-readiness.md | PoF readiness checklist, lender submission workflow |
+| ⚫ | Security Hardening | 16-post-deployment-security-hardening.md | Post-deployment hardening, token rotation, and repo hygiene |
 
 ## Project Control Specs
 

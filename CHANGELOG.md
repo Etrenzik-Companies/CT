@@ -1,4 +1,13 @@
 ﻿# Changelog
+## 0.7.1 - 2026-04-27
+
+### Post-Deployment Hardening
+
+- Added `docs/16-post-deployment-security-hardening.md` with Phase 6 deployment status, token-rotation requirements, GitHub Actions secret recommendations, and repo hygiene follow-up.
+- Updated `docs/00-table-of-contents.md` to include the Phase 6 hardening note.
+- Added `scripts/verify-phase6-live.ps1` for non-interactive HTTP `200` verification of `https://ct.unykorn.org`.
+- Added `scripts/check-repo-hygiene.ps1` to report current branch, upstream tracking, working tree status, latest commit, and whether `phase6-rwa-xrpl-pof-funding-v1` is reachable from `main`.
+
 ## 0.7.0 - 2026-04-27
 
 ### Phase 6 — RWA, XRPL, PoF, ESG, Incentive, and Funding Intelligence
